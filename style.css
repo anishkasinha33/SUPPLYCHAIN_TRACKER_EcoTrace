@@ -1083,3 +1083,89 @@ body.preview-mode .consumer-stage { min-height: 100vh; border-radius: 0; padding
   .table td:not(.cell-main) { white-space: normal; }
   .table td .chips { flex-wrap: wrap; }
 }
+
+/* ==========================================================================
+   Added: Auth (phone/OTP + onboarding), language toggle, Vendor Discovery
+   Purely additive — reuses existing tokens (--surface, --border, --shadow-*,
+   --r-*, --ease) and existing component classes (.card, .field, .input,
+   .btn, .badge, .chip, .rating, .grid-cards, .toolbar) so it inherits the
+   current theme/typography automatically in both light and dark mode.
+   ========================================================================== */
+
+/* Auth gate: hide the app shell until html.ecotrace-authed is set */
+html:not(.ecotrace-authed) .app,
+html:not(.ecotrace-authed) #modalRoot,
+html:not(.ecotrace-authed) .toast-region,
+html:not(.ecotrace-authed) .preview-exit { display: none !important; }
+html.ecotrace-authed #authRoot { display: none !important; }
+
+.auth-screen {
+  position: fixed; inset: 0; z-index: 500; display: flex; align-items: center; justify-content: center;
+  padding: 24px; background:
+    radial-gradient(1200px 600px at 15% -10%, var(--primary-soft), transparent 60%),
+    radial-gradient(900px 500px at 110% 110%, var(--primary-soft), transparent 55%),
+    var(--bg);
+  animation: fadeIn 0.22s var(--ease);
+}
+.auth-screen.closing { animation: fadeOut 0.18s var(--ease) forwards; }
+.auth-card {
+  width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-xl); box-shadow: var(--shadow-lg); padding: 34px 30px; animation: modalIn 0.26s var(--ease);
+}
+.auth-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; color: var(--primary); font-family: var(--font-display); font-weight: 600; font-size: 18px; }
+.auth-brand .brand__mark { width: 34px; height: 34px; flex-shrink: 0; border-radius: 10px; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; }
+.auth-brand .brand__mark svg { width: 20px; height: 20px; }
+.auth-step h1 { font-family: var(--font-display); font-weight: 600; font-size: 22px; letter-spacing: -0.01em; }
+.auth-step > p { color: var(--text-muted); font-size: 14px; margin-top: 6px; margin-bottom: 20px; }
+.auth-step .field { margin-bottom: 6px; }
+.auth-submit { width: 100%; margin-top: 18px; }
+.phone-prefix { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-weight: 600; font-size: 14px; }
+.auth-step .input-affix .input { padding-left: 46px; }
+
+.otp-boxes { display: flex; gap: 10px; }
+.otp-box {
+  width: 100%; height: 54px; text-align: center; font-size: 22px; font-weight: 700;
+  border: 1px solid var(--border-strong); border-radius: var(--r-md); background: var(--surface);
+  color: var(--text); font-family: var(--font-sans); transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+.otp-box:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+.field.has-error .otp-box { border-color: var(--danger); }
+.auth-demo-hint { margin-top: 12px; font-size: 12.5px; color: var(--text-faint); background: var(--surface-muted); border-radius: var(--r-sm); padding: 8px 10px; }
+.auth-links { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; }
+
+.lang-btn { font-weight: 700; font-size: 12.5px; letter-spacing: 0.01em; }
+
+/* Vendor Discovery */
+.acc {
+  border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface);
+  padding: 14px 16px; margin-bottom: 18px;
+}
+.acc summary { display: flex; align-items: center; gap: 10px; cursor: pointer; font-weight: 600; font-size: 14px; list-style: none; }
+.acc summary::-webkit-details-marker { display: none; }
+.acc summary svg { width: 18px; height: 18px; color: var(--primary); flex-shrink: 0; }
+.acc p { margin-top: 10px; color: var(--text-muted); font-size: 13.5px; line-height: 1.55; }
+
+.callout {
+  display: flex; align-items: center; gap: 10px; padding: 12px 14px; margin-bottom: 16px;
+  border-radius: var(--r-md); background: var(--warning-bg); color: var(--warning-fg); font-size: 13.5px; font-weight: 500;
+}
+.callout svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+.vendor-card { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.vendor-card__top { display: flex; align-items: flex-start; gap: 12px; }
+.vendor-contact { border-top: 1px solid var(--border); padding-top: 12px; margin-top: -2px; }
+.vendor-contact summary {
+  display: flex; align-items: center; gap: 8px; cursor: pointer; list-style: none;
+  font-weight: 600; font-size: 13.5px; color: var(--text);
+}
+.vendor-contact summary::-webkit-details-marker { display: none; }
+.vendor-contact__chev { width: 16px; height: 16px; color: var(--text-faint); transition: transform 0.18s var(--ease); }
+.vendor-contact[open] .vendor-contact__chev { transform: rotate(180deg); }
+.vendor-contact__body { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; font-size: 13.5px; color: var(--text-muted); animation: rowIn 0.2s var(--ease); }
+.vendor-contact__body > div { display: flex; align-items: center; gap: 8px; }
+.vendor-contact__body svg { width: 16px; height: 16px; color: var(--text-faint); flex-shrink: 0; }
+
+@media (max-width: 480px) {
+  .auth-card { padding: 26px 20px; }
+  .otp-box { height: 48px; font-size: 19px; }
+}

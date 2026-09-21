@@ -26,6 +26,7 @@ const PAGES = {
   suppliers: { title: 'Suppliers', desc: 'Track supplier verification, labor practices and audits' },
   materials: { title: 'Materials', desc: 'The materials library behind every product' },
   sustainability: { title: 'Sustainability', desc: 'Environmental and ethical performance analytics' },
+  vendors: { title: 'Vendor Discovery', desc: 'Find and compare raw-material vendors by cost, distance and sustainability' },
   consumer: { title: 'Consumer View', desc: 'What customers see when they scan a product code' },
   settings: { title: 'Settings', desc: 'Business profile, appearance and data' }
 };
@@ -858,7 +859,7 @@ function renderCurrentPage() {
   destroyCharts();
   const renderers = {
     dashboard: renderDashboard, products: renderProducts, suppliers: renderSuppliers, materials: renderMaterials,
-    sustainability: renderSustainability, consumer: renderConsumer, settings: renderSettings
+    sustainability: renderSustainability, vendors: renderVendorDiscovery, consumer: renderConsumer, settings: renderSettings
   };
   (renderers[state.page] || renderDashboard)();
   refreshChrome();
