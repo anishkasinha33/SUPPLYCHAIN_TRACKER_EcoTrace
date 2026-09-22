@@ -69,6 +69,9 @@
         <a class="nav__link" href="#/dashboard" data-page="dashboard" title="Dashboard">
           <i data-lucide="layout-dashboard" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.dashboard">Dashboard</span>
         </a>
+        <a class="nav__link" href="#/pipeline" data-page="pipeline" title="Pipeline">
+          <i data-lucide="workflow" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.pipeline">Pipeline</span>
+        </a>
         <a class="nav__link" href="#/products" data-page="products" title="Products">
           <i data-lucide="package" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.products">Products</span>
           <span class="nav__count" id="navProductCount"></span>
@@ -84,8 +87,8 @@
           <i data-lucide="sprout" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.sustainability">Sustainability</span>
         </a>
 
-        <a class="nav__link" href="#/vendors" data-page="vendors" title="Vendor Discovery">
-          <i data-lucide="search" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.vendors">Vendor Discovery</span>
+        <a class="nav__link" href="#/providers" data-page="providers" title="Providers">
+          <i data-lucide="search" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.providers">Providers</span>
         </a>
 
         <a class="nav__link" href="#/consumer" data-page="consumer" title="Consumer View">
@@ -172,11 +175,12 @@
 
       <main class="main" id="main" tabindex="-1">
         <section class="page" id="page-dashboard" data-page="dashboard" aria-label="Dashboard" hidden></section>
+        <section class="page" id="page-pipeline" data-page="pipeline" aria-label="Pipeline" hidden></section>
         <section class="page" id="page-products" data-page="products" aria-label="Products" hidden></section>
         <section class="page" id="page-suppliers" data-page="suppliers" aria-label="Suppliers" hidden></section>
         <section class="page" id="page-materials" data-page="materials" aria-label="Materials" hidden></section>
         <section class="page" id="page-sustainability" data-page="sustainability" aria-label="Sustainability" hidden></section>
-        <section class="page" id="page-vendors" data-page="vendors" aria-label="Vendor Discovery" hidden></section>
+        <section class="page" id="page-providers" data-page="providers" aria-label="Providers" hidden></section>
         <section class="page" id="page-consumer" data-page="consumer" aria-label="Consumer view" hidden></section>
         <section class="page" id="page-settings" data-page="settings" aria-label="Settings" hidden></section>
       </main>
@@ -192,11 +196,19 @@
 
   <script src="https://unpkg.com/lucide@1.47.0/dist/umd/lucide.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
-  <!-- Additive modules: i18n dictionary + vendor discovery data must be
-       ready before script.js's router calls into them; auth.js runs last
-       so it can safely extend the already-defined app (state, renderSettings). -->
+  <!-- Additive modules: i18n dictionary + provider directory + pipeline
+       must all be parsed before script.js's own init() runs — its
+       renderCurrentPage() builds a `renderers` object literal referencing
+       renderProviders/renderPipeline by name, and those identifiers must
+       already exist the first time that literal is evaluated (at load,
+       not just by the time they're actually called). auth.js runs last so
+       it can safely extend the already-defined app (state, renderSettings);
+       providers.js/pipeline.js only call window.EcoTraceAuth from inside
+       functions invoked later at render time, so load order doesn't matter
+       for that part. -->
   <script src="i18n.js" defer></script>
-  <script src="vendorData.js" defer></script>
+  <script src="providers.js" defer></script>
+  <script src="pipeline.js" defer></script>
   <script src="script.js" defer></script>
   <script src="auth.js" defer></script>
 </body>

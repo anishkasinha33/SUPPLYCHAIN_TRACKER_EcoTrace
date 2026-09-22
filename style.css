@@ -1085,7 +1085,7 @@ body.preview-mode .consumer-stage { min-height: 100vh; border-radius: 0; padding
 }
 
 /* ==========================================================================
-   Added: Auth (phone/OTP + onboarding), language toggle, Vendor Discovery
+   Added: Auth (phone/OTP + onboarding), language toggle, Provider directory
    Purely additive — reuses existing tokens (--surface, --border, --shadow-*,
    --r-*, --ease) and existing component classes (.card, .field, .input,
    .btn, .badge, .chip, .rating, .grid-cards, .toolbar) so it inherits the
@@ -1135,7 +1135,8 @@ html.ecotrace-authed #authRoot { display: none !important; }
 
 .lang-btn { font-weight: 700; font-size: 12.5px; letter-spacing: 0.01em; }
 
-/* Vendor Discovery */
+/* Provider directory cards (class names kept from the original Vendor
+   Discovery feature; providers.js reuses them as-is). */
 .acc {
   border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface);
   padding: 14px 16px; margin-bottom: 18px;
@@ -1169,3 +1170,39 @@ html.ecotrace-authed #authRoot { display: none !important; }
   .auth-card { padding: 26px 20px; }
   .otp-box { height: 48px; font-size: 19px; }
 }
+
+/* ==========================================================================
+   Added: Provider Directory cards, score-breakdown modal, and the Pipeline
+   stage tracker. Purely additive — reuses existing tokens/components
+   (.card, .badge, .chip, .rating, .field, .select, .textarea, .journey,
+   .acc, .callout) so it inherits the current theme automatically.
+   ========================================================================== */
+.provider-card { padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+
+.score-breakdown .score-parts { margin-top: 0; padding-top: 0; border-top: 0; }
+.score-reasons { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); }
+.score-reasons h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+.score-reasons ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.score-reasons li { display: flex; align-items: flex-start; gap: 9px; font-size: 13.5px; color: var(--text-muted); line-height: 1.45; }
+.score-reasons li svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; color: var(--success); }
+
+.provider-pick-list { display: flex; flex-direction: column; gap: 10px; }
+.provider-pick-row {
+  display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface);
+}
+.provider-pick-row .rating { flex-shrink: 0; }
+
+.pipeline-stages { display: flex; flex-direction: column; gap: 20px; margin-top: 24px; }
+.pipeline-stage .sup-card__grid { margin-top: 18px; }
+.pipeline-stage > .btn { margin-top: 14px; }
+.pipeline-updates { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); }
+.pipeline-updates h3 { font-size: 14px; font-weight: 700; }
+.update-list { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
+.update-item { display: flex; align-items: flex-start; gap: 12px; }
+.update-item__head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 13.5px; }
+.update-item__head small { color: var(--text-faint); font-weight: 500; }
+.update-item__note { margin-top: 4px; font-size: 13.5px; color: var(--text-muted); line-height: 1.5; }
+.pipeline-update-form { display: flex; flex-direction: column; gap: 14px; margin-top: 16px; }
+
+/* Journey strip used read-only at the top of the Pipeline page: same
+   component, no extra rules needed beyond what already exists for it. */
