@@ -11,8 +11,8 @@ const DEFAULT_SUPPLIERS = [
     {
         id: "SUP-1",
         name: "GreenTex Mills",
-        city: "Coimbatore",
-        state: "Tamil Nadu",
+        city: "Jaipur",
+        state: "Rajasthan",
         country: "India",
         material: "Organic Cotton & Recycled Yarn",
         score: 90,
@@ -27,8 +27,8 @@ const DEFAULT_SUPPLIERS = [
     {
         id: "SUP-2",
         name: "Apex Assembly Hub",
-        city: "Pune",
-        state: "Maharashtra",
+        city: "Ludhiana",
+        state: "Punjab",
         country: "India",
         material: "Metal Hardware & Fittings",
         score: 90,
@@ -43,8 +43,8 @@ const DEFAULT_SUPPLIERS = [
     {
         id: "SUP-3",
         name: "SafeWorks India Audit",
-        city: "Bengaluru",
-        state: "Karnataka",
+        city: "Hyderabad",
+        state: "Telangana",
         country: "India",
         material: "Audit & Safety Compliance Services",
         score: 95,
@@ -59,8 +59,8 @@ const DEFAULT_SUPPLIERS = [
     {
         id: "SUP-4",
         name: "BioPack Boxes",
-        city: "Vapi",
-        state: "Gujarat",
+        city: "Kochi",
+        state: "Kerala",
         country: "India",
         material: "Recycled Cardboard Packaging",
         score: 85,
@@ -75,8 +75,8 @@ const DEFAULT_SUPPLIERS = [
     {
         id: "SUP-5",
         name: "Bamboo Craft Collective",
-        city: "Guwahati",
-        state: "Assam",
+        city: "Shillong",
+        state: "Meghalaya",
         country: "India",
         material: "Raw Bamboo Cane",
         score: 90,
@@ -710,15 +710,31 @@ function viewSupplierProfile(supplierId, editable = true) {
     document.getElementById("profSupName").textContent = sup.name;
     document.getElementById("profSupId").textContent = sup.id;
     document.getElementById("profSupScore").textContent = sup.score;
-    document.getElementById("profSupCity").textContent = sup.city || "Not Specified";
-    document.getElementById("profSupState").textContent = sup.state || "Not Specified";
-    document.getElementById("profSupMaterial").textContent = sup.material || "Not Specified";
-    document.getElementById("profSupContact").textContent = sup.contact || "Compliance Director";
-    document.getElementById("profSupEmail").textContent = sup.email || `contact@${sup.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`;
-    document.getElementById("profSupEnergy").textContent = sup.energy || "80% Renewable Clean Power";
+    document.getElementById("profSupCity").value = sup.city || "";
+    document.getElementById("profSupState").value = sup.state || "";
+    document.getElementById("profSupMaterial").value = sup.material || "";
+    document.getElementById("profSupContact").value = sup.contact || "";
+    document.getElementById("profSupEmail").value = sup.email || "";
+    document.getElementById("profSupEnergy").value = sup.energy || "";
+    document.getElementById("profSupAuditSelect").value = sup.audit || "Fair Trade Certified";
     document.getElementById("profSupCertId").textContent = sup.certId ? `Cert #${sup.certId}` : "Cert #SDG-8801";
     document.getElementById("profSupAuditBadge").textContent = sup.audit || "Unverified";
     document.getElementById("profSupAuditBadge").className = `badge ${sup.audit && sup.audit.includes('Certified') ? 'bg-success' : 'bg-warning text-dark'}`;
+
+    // Detail fields can only be typed into when opened from the Suppliers tab
+    const detailInputs = [
+        document.getElementById("profSupCity"),
+        document.getElementById("profSupState"),
+        document.getElementById("profSupMaterial"),
+        document.getElementById("profSupContact"),
+        document.getElementById("profSupEmail"),
+        document.getElementById("profSupEnergy")
+    ];
+    detailInputs.forEach(input => {
+        input.readOnly = !editable;
+        input.classList.toggle("bg-light", !editable);
+    });
+    document.getElementById("profSupAuditSelect").disabled = !editable;
 
     // Find which products and stages this supplier participates in
     const stagesSupplied = [];
@@ -765,22 +781,32 @@ function editSupplierFromProductsTab() {
     modalSupplierProfile.hide();
 }
 
-function saveSupplierProfileScore() {
+function saveSupplierProfileDetails() {
     const supplierId = document.getElementById("profSupId").textContent;
     const sup = appState.suppliers.find(s => s.id === supplierId);
     if (!sup) return;
+
+    sup.city = document.getElementById("profSupCity").value.trim() || "Not Specified";
+    sup.state = document.getElementById("profSupState").value.trim() || "Not Specified";
+    sup.material = document.getElementById("profSupMaterial").value.trim() || "Not Specified";
+    sup.contact = document.getElementById("profSupContact").value.trim() || "Not Specified";
+    sup.email = document.getElementById("profSupEmail").value.trim() || "Not Specified";
+    sup.energy = document.getElementById("profSupEnergy").value.trim() || "Not Specified";
+    sup.audit = document.getElementById("profSupAuditSelect").value;
 
     const checklist = getChecklistArray("prof");
     sup.checklist = checklist;
     sup.score = getScoreFromChecklist(checklist);
 
     document.getElementById("profSupScore").textContent = sup.score;
+    document.getElementById("profSupAuditBadge").textContent = sup.audit;
+    document.getElementById("profSupAuditBadge").className = `badge ${sup.audit.includes('Certified') ? 'bg-success' : 'bg-warning text-dark'}`;
 
     saveAppData();
     renderSuppliersPage();
     if (appState.activePage === "products") renderProductsPage();
     if (appState.activePage === "home") renderHomePage();
-    showToast(`Sustainability score updated for <strong>${sup.name}</strong>.`, "success");
+    showToast(`Supplier details updated for <strong>${sup.name}</strong>.`, "success");
 }
 
 function openUpdateStageStatusModal(stageIdx) {

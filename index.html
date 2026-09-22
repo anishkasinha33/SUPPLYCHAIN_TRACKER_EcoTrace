@@ -413,28 +413,36 @@
                     <h6 class="fw-bold text-uppercase small text-muted border-bottom pb-2 mb-3">Enterprise Information &amp; Contacts</h6>
                     <div class="row g-3 mb-4">
                         <div class="col-sm-6">
-                            <span class="text-muted small d-block">City:</span>
-                            <strong id="profSupCity">Pune</strong>
+                            <label class="text-muted small d-block mb-1" for="profSupCity">City:</label>
+                            <input type="text" class="form-control form-control-sm" id="profSupCity" value="Pune">
                         </div>
                         <div class="col-sm-6">
-                            <span class="text-muted small d-block">State:</span>
-                            <strong id="profSupState">Maharashtra</strong>
+                            <label class="text-muted small d-block mb-1" for="profSupState">State:</label>
+                            <input type="text" class="form-control form-control-sm" id="profSupState" value="Maharashtra">
                         </div>
                         <div class="col-sm-6">
-                            <span class="text-muted small d-block">Material Supplied:</span>
-                            <strong id="profSupMaterial">--</strong>
+                            <label class="text-muted small d-block mb-1" for="profSupMaterial">Material Supplied:</label>
+                            <input type="text" class="form-control form-control-sm" id="profSupMaterial" value="--">
                         </div>
                         <div class="col-sm-6">
-                            <span class="text-muted small d-block">Lead Compliance Officer:</span>
-                            <strong id="profSupContact">Rohan Deshmukh</strong>
+                            <label class="text-muted small d-block mb-1" for="profSupContact">Lead Compliance Officer:</label>
+                            <input type="text" class="form-control form-control-sm" id="profSupContact" value="Rohan Deshmukh">
                         </div>
                         <div class="col-sm-6">
-                            <span class="text-muted small d-block">Official Email:</span>
-                            <span id="profSupEmail">contact@supplier.org</span>
+                            <label class="text-muted small d-block mb-1" for="profSupEmail">Official Email:</label>
+                            <input type="text" class="form-control form-control-sm" id="profSupEmail" value="contact@supplier.org">
                         </div>
                         <div class="col-sm-6">
-                            <span class="text-muted small d-block">Renewable Energy Utilization:</span>
-                            <strong class="text-success" id="profSupEnergy">100% Solar &amp; Wind</strong>
+                            <label class="text-muted small d-block mb-1" for="profSupEnergy">Renewable Energy Utilization:</label>
+                            <input type="text" class="form-control form-control-sm" id="profSupEnergy" value="100% Solar &amp; Wind">
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="text-muted small d-block mb-1" for="profSupAuditSelect">Audit Standard:</label>
+                            <select class="form-select form-select-sm" id="profSupAuditSelect">
+                                <option value="Fair Trade Certified">Fair Trade Certified (SDG 8)</option>
+                                <option value="ISO 14001 Audited">ISO 14001 Audited</option>
+                                <option value="Unverified / High Risk">Unverified / High Risk</option>
+                            </select>
                         </div>
                     </div>
 
@@ -454,7 +462,7 @@
                 </div>
                 <div class="modal-footer border-top">
                     <button type="button" id="profCancelBtn" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" id="profSaveScoreBtn" class="btn btn-sm btn-success px-3" onclick="saveSupplierProfileScore()">Save Score</button>
+                    <button type="button" id="profSaveScoreBtn" class="btn btn-sm btn-success px-3" onclick="saveSupplierProfileDetails()">Save Changes</button>
                     <button type="button" id="profEditRedirectBtn" class="btn btn-sm btn-primary px-3 d-none" onclick="editSupplierFromProductsTab()">Edit Supplier Details &rarr;</button>
                     <button type="button" class="btn btn-sm btn-dark px-3" data-bs-dismiss="modal">Close Profile</button>
                 </div>
