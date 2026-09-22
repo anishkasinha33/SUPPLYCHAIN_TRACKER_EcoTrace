@@ -399,7 +399,7 @@ let pendingEditRedirect = false;
 let newProductStages = [];
 
 function loadAppData() {
-    const saved = localStorage.getItem("ecoTrackPortalData_v2");
+    const saved = localStorage.getItem("ecoTrackPortalData_v3");
     if (saved) {
         try {
             appState = JSON.parse(saved);
@@ -419,7 +419,7 @@ function loadAppData() {
 }
 
 function saveAppData() {
-    localStorage.setItem("ecoTrackPortalData_v2", JSON.stringify(appState));
+    localStorage.setItem("ecoTrackPortalData_v3", JSON.stringify(appState));
 }
 
 function navigateToPage(pageName) {
