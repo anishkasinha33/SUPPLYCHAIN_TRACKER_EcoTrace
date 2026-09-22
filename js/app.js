@@ -11,7 +11,7 @@ const DEFAULT_SUPPLIERS = [
     {
         id: "SUP-1",
         name: "GreenTex Mills",
-        country: "India",
+        country: "Tamil Nadu, India",
         material: "Organic Cotton & Recycled Yarn",
         score: 90,
         checklist: makeChecklist(18),
@@ -25,56 +25,56 @@ const DEFAULT_SUPPLIERS = [
     {
         id: "SUP-2",
         name: "Apex Assembly Hub",
-        country: "Portugal",
+        country: "Maharashtra, India",
         material: "Metal Hardware & Fittings",
         score: 90,
         checklist: makeChecklist(18),
         audit: "ISO 14001 Audited",
-        contact: "Maria Santos",
-        email: "maria.s@apexassembly.pt",
-        certId: "ISO-14001-EU912",
+        contact: "Rohan Deshmukh",
+        email: "rohan.d@apexassembly.in",
+        certId: "ISO-14001-IN912",
         energy: "100% Renewable Hydroelectric",
         specialty: "Low-impact automated sewing & CNC assembly"
     },
     {
         id: "SUP-3",
-        name: "Nordic Safe Audit",
-        country: "Sweden",
+        name: "SafeWorks India Audit",
+        country: "Karnataka, India",
         material: "Audit & Safety Compliance Services",
         score: 95,
         checklist: makeChecklist(19),
         audit: "Fair Trade Certified",
-        contact: "Elin Lindqvist",
-        email: "elin@nordicsafeaudit.se",
-        certId: "SA8000-SE-4401",
+        contact: "Ananya Iyer",
+        email: "ananya@safeworksindia.in",
+        certId: "SA8000-IN-4401",
         energy: "100% Wind Power",
         specialty: "UN SDG 8 fair labor auditing & material safety testing"
     },
     {
         id: "SUP-4",
         name: "BioPack Boxes",
-        country: "Germany",
+        country: "Gujarat, India",
         material: "Recycled Cardboard Packaging",
         score: 85,
         checklist: makeChecklist(17),
         audit: "Fair Trade Certified",
-        contact: "Hans Weber",
-        email: "h.weber@biopack-packaging.de",
-        certId: "FSC-DE-2099",
+        contact: "Vikram Mehta",
+        email: "vikram.m@biopack-packaging.in",
+        certId: "FSC-IN-2099",
         energy: "70% Biomass & Solar",
         specialty: "FSC-certified 100% post-consumer corrugated cardboard"
     },
     {
         id: "SUP-5",
         name: "Bamboo Craft Collective",
-        country: "Vietnam",
+        country: "Assam, India",
         material: "Raw Bamboo Cane",
         score: 90,
         checklist: makeChecklist(18),
         audit: "Fair Trade Certified",
-        contact: "Nguyen Thi Lan",
-        email: "lan.nguyen@bamboocraft.vn",
-        certId: "FT-VN-1192",
+        contact: "Priyanka Baruah",
+        email: "priyanka.baruah@bamboocraft.in",
+        certId: "FT-IN-1192",
         energy: "Manual & Solar Thermal",
         specialty: "Regenerative bamboo harvesting & natural beeswax seal"
     }
@@ -132,7 +132,7 @@ const SEED_PRODUCTS = [
                 supplierId: "SUP-1",
                 completedDate: "Sep 12, 2026",
                 notes: "Zero pesticide organic cotton verified by third party.",
-                transitToNext: { mode: "Electric Cargo Train", carrier: "RailGreen Europe", emissions: "Low" }
+                transitToNext: { mode: "Electric Cargo Train", carrier: "RailGreen India", emissions: "Low" }
             },
             {
                 name: "2. Assembly & Stitching",
@@ -172,7 +172,7 @@ const SEED_PRODUCTS = [
                 supplierId: "SUP-5",
                 completedDate: "Sep 08, 2026",
                 notes: "Certified non-deforestation farm harvest.",
-                transitToNext: { mode: "Electric Cargo Train", carrier: "Asia Rail Express", emissions: "Low" }
+                transitToNext: { mode: "Electric Cargo Train", carrier: "Konkan Rail Express", emissions: "Low" }
             },
             {
                 name: "2. Assembly & Carving",
@@ -960,7 +960,7 @@ function saveNewProduct() {
         batch: batch,
         currentStageIndex: 0,
         stages: [
-            { name: "1. Raw Materials Sourcing", desc: "Sourcing certified baseline materials", supplierId: "SUP-1", completedDate: null, transitToNext: { mode: "Electric Cargo Train", carrier: "RailGreen Europe", emissions: "Low" } },
+            { name: "1. Raw Materials Sourcing", desc: "Sourcing certified baseline materials", supplierId: "SUP-1", completedDate: null, transitToNext: { mode: "Electric Cargo Train", carrier: "RailGreen India", emissions: "Low" } },
             { name: "2. Assembly & Manufacturing", desc: "Ethical manufacturing with clean power", supplierId: "SUP-2", completedDate: null, transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" } },
             { name: "3. Quality & Ethical Inspection", desc: "SDG 8 fair wages and material audit", supplierId: "SUP-3", completedDate: null, transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" } },
             { name: "4. Packaging & Delivered", desc: "Recycled box packaging delivered to end point", supplierId: "SUP-4", completedDate: null, transitToNext: null }
