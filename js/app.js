@@ -199,6 +199,174 @@ const SEED_PRODUCTS = [
                 transitToNext: null
             }
         ]
+    },
+    {
+        id: "PROD-103",
+        name: "Recycled Denim Tote Bag",
+        batch: "BATCH-3157",
+        currentStageIndex: 0,
+        stages: [
+            {
+                name: "1. Raw Materials Sourcing",
+                desc: "Collecting post-consumer denim scraps for shredding and re-spinning",
+                supplierId: "SUP-1",
+                completedDate: null,
+                notes: "Awaiting first batch of reclaimed denim.",
+                transitToNext: { mode: "Electric Cargo Train", carrier: "RailGreen India", emissions: "Low" }
+            },
+            {
+                name: "2. Assembly & Stitching",
+                desc: "Reinforced stitching using solar-powered machines",
+                supplierId: "SUP-2",
+                completedDate: null,
+                notes: "",
+                transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" }
+            },
+            {
+                name: "3. Quality & Ethical Inspection",
+                desc: "Durability testing and fair labor audit",
+                supplierId: "SUP-3",
+                completedDate: null,
+                notes: "",
+                transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" }
+            },
+            {
+                name: "4. Packaging & Delivered",
+                desc: "Compostable wrap, ready for dispatch",
+                supplierId: "SUP-4",
+                completedDate: null,
+                notes: "",
+                transitToNext: null
+            }
+        ]
+    },
+    {
+        id: "PROD-104",
+        name: "Steel Water Bottle",
+        batch: "BATCH-6622",
+        currentStageIndex: 3,
+        stages: [
+            {
+                name: "1. Raw Materials Sourcing",
+                desc: "Sourcing food-grade recycled stainless steel sheets",
+                supplierId: "SUP-2",
+                completedDate: "Sep 01, 2026",
+                notes: "100% recycled steel stock confirmed.",
+                transitToNext: { mode: "Electric Cargo Train", carrier: "RailGreen India", emissions: "Low" }
+            },
+            {
+                name: "2. Precision Manufacturing",
+                desc: "CNC forming, welding and polishing",
+                supplierId: "SUP-2",
+                completedDate: "Sep 05, 2026",
+                notes: "Zero-leak seam welding verified.",
+                transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" }
+            },
+            {
+                name: "3. Quality & Ethical Inspection",
+                desc: "Leak testing and factory safety audit",
+                supplierId: "SUP-3",
+                completedDate: "Sep 09, 2026",
+                notes: "Passed SDG 8.8 safety and hygiene checks.",
+                transitToNext: { mode: "Electric Delivery Van", carrier: "Local Clean Fleet", emissions: "Zero" }
+            },
+            {
+                name: "4. Packaging & Delivered",
+                desc: "Recycled cardboard sleeve packaging shipped to customer",
+                supplierId: "SUP-4",
+                completedDate: "Sep 12, 2026",
+                notes: "Delivered with zero single-use plastic wrap.",
+                transitToNext: null
+            }
+        ]
+    },
+    {
+        id: "PROD-105",
+        name: "Bamboo Cutlery Set",
+        batch: "BATCH-9043",
+        currentStageIndex: 1,
+        stages: [
+            {
+                name: "1. Raw Materials Sourcing",
+                desc: "Harvesting mature bamboo culms from Assam plantations",
+                supplierId: "SUP-5",
+                completedDate: "Sep 10, 2026",
+                notes: "Certified non-deforestation farm harvest.",
+                transitToNext: { mode: "Electric Cargo Train", carrier: "Konkan Rail Express", emissions: "Low" }
+            },
+            {
+                name: "2. Cutting & Shaping",
+                desc: "CNC shaping into fork, spoon and knife sets",
+                supplierId: "SUP-2",
+                completedDate: null,
+                notes: "",
+                transitToNext: { mode: "Electric Delivery Van", carrier: "CleanHaul Logistics", emissions: "Zero" }
+            },
+            {
+                name: "3. Natural Finishing",
+                desc: "Beeswax sealing for water resistance",
+                supplierId: "SUP-5",
+                completedDate: null,
+                notes: "",
+                transitToNext: { mode: "Electric Delivery Van", carrier: "Local Clean Fleet", emissions: "Zero" }
+            },
+            {
+                name: "4. Quality & Ethical Inspection",
+                desc: "Splinter-safety and hygiene audit",
+                supplierId: "SUP-3",
+                completedDate: null,
+                notes: "",
+                transitToNext: { mode: "Bio-Fuel Maritime Ship", carrier: "EcoLine Sea", emissions: "Moderate" }
+            },
+            {
+                name: "5. Packaging & Delivered",
+                desc: "Plastic-free pouch packaging shipped to retailers",
+                supplierId: "SUP-4",
+                completedDate: null,
+                notes: "",
+                transitToNext: null
+            }
+        ]
+    },
+    {
+        id: "PROD-106",
+        name: "Organic Cotton T-Shirt",
+        batch: "BATCH-2285",
+        currentStageIndex: 2,
+        stages: [
+            {
+                name: "1. Raw Materials Sourcing",
+                desc: "GOTS-certified organic cotton procurement",
+                supplierId: "SUP-1",
+                completedDate: "Sep 05, 2026",
+                notes: "Zero pesticide organic cotton verified by third party.",
+                transitToNext: { mode: "Electric Cargo Train", carrier: "RailGreen India", emissions: "Low" }
+            },
+            {
+                name: "2. Assembly & Stitching",
+                desc: "Low-impact dyeing and stitching",
+                supplierId: "SUP-2",
+                completedDate: "Sep 11, 2026",
+                notes: "Azo-free dyes used throughout.",
+                transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" }
+            },
+            {
+                name: "3. Quality & Ethical Inspection",
+                desc: "Fabric strength and living wage audit",
+                supplierId: "SUP-3",
+                completedDate: null,
+                notes: "",
+                transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" }
+            },
+            {
+                name: "4. Packaging & Delivered",
+                desc: "Recycled paper packaging dispatched to warehouse",
+                supplierId: "SUP-4",
+                completedDate: null,
+                notes: "",
+                transitToNext: null
+            }
+        ]
     }
 ];
 
@@ -218,6 +386,7 @@ let modalUpdateStageStatus = null;
 let activeTargetStageIndex = null;
 let currentProfileSupplierId = null;
 let pendingEditRedirect = false;
+let newProductStages = [];
 
 function loadAppData() {
     const saved = localStorage.getItem("ecoTrackPortalData_v2");
@@ -922,16 +1091,22 @@ function openChangeTransitModal(stageIndex) {
     modalChangeTransit.show();
 }
 
+// Works out an emissions rating from a transport mode's name
+function getEmissionsForMode(mode) {
+    let emissions = "Moderate";
+    if (mode.includes("Train") || mode.includes("Van")) emissions = "Low";
+    if (mode.includes("Zero") || mode.includes("Electric Delivery")) emissions = "Zero";
+    if (mode.includes("Diesel")) emissions = "High";
+    return emissions;
+}
+
 function saveTransitChange() {
     const prod = appState.products.find(p => p.id === appState.selectedProductId);
     if (!prod || activeTargetStageIndex === null) return;
 
     const mode = document.getElementById("transitModeSelect").value;
     const carrier = document.getElementById("transitCarrierName").value.trim() || "Green Logistics Lines";
-    let emissions = "Moderate";
-    if (mode.includes("Train") || mode.includes("Van")) emissions = "Low";
-    if (mode.includes("Zero") || mode.includes("Electric Delivery")) emissions = "Zero";
-    if (mode.includes("Diesel")) emissions = "High";
+    const emissions = getEmissionsForMode(mode);
 
     prod.stages[activeTargetStageIndex].transitToNext = { mode, carrier, emissions };
     saveAppData();
@@ -943,7 +1118,101 @@ function saveTransitChange() {
 function openNewProductModal() {
     document.getElementById("createProdName").value = "";
     document.getElementById("createProdBatch").value = `BATCH-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    // Start with two blank stages so there's already a stage to fill in and a place to attach transit
+    newProductStages = [
+        { name: "", desc: "", supplierId: "", transitMode: "Electric Cargo Train", transitCarrier: "" },
+        { name: "", desc: "", supplierId: "", transitMode: "Electric Cargo Train", transitCarrier: "" }
+    ];
+    renderNewProductStageBuilder();
+
     modalCreateProduct.show();
+}
+
+// Draws every stage row in the Add Product modal from the newProductStages array
+function renderNewProductStageBuilder() {
+    const container = document.getElementById("createProdStagesContainer");
+    let html = "";
+
+    newProductStages.forEach((stage, idx) => {
+        const isLastStage = idx === newProductStages.length - 1;
+        let supplierOptions = `<option value="">-- No Supplier Yet --</option>`;
+        appState.suppliers.forEach(s => {
+            const selected = s.id === stage.supplierId ? "selected" : "";
+            supplierOptions += `<option value="${s.id}" ${selected}>${s.name} (${s.country})</option>`;
+        });
+
+        html += `
+            <div class="border rounded p-3 mb-3 bg-light">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <strong class="small text-uppercase text-muted">Stage ${idx + 1}</strong>
+                    ${newProductStages.length > 1 ? `<button type="button" class="btn btn-sm btn-outline-danger py-0 px-2" onclick="removeNewProductStage(${idx})">Remove</button>` : ""}
+                </div>
+                <div class="mb-2">
+                    <input type="text" class="form-control form-control-sm" id="npsName_${idx}" placeholder="Stage Name (e.g., Raw Material Sourcing)" value="${stage.name}">
+                </div>
+                <div class="mb-2">
+                    <input type="text" class="form-control form-control-sm" id="npsDesc_${idx}" placeholder="Short description (optional)" value="${stage.desc}">
+                </div>
+                <div class="mb-2">
+                    <select class="form-select form-select-sm" id="npsSupplier_${idx}">${supplierOptions}</select>
+                </div>
+                ${isLastStage ? `
+                    <span class="small text-muted">Final stage &mdash; no transport needed after this one.</span>
+                ` : `
+                    <label class="small text-muted d-block mb-1">Transport to next stage:</label>
+                    <div class="row g-2">
+                        <div class="col-7">
+                            <select class="form-select form-select-sm" id="npsMode_${idx}">
+                                <option value="Electric Cargo Train" ${stage.transitMode === "Electric Cargo Train" ? "selected" : ""}>Electric Cargo Train</option>
+                                <option value="Electric Delivery Van" ${stage.transitMode === "Electric Delivery Van" ? "selected" : ""}>Electric Delivery Van</option>
+                                <option value="Bio-Fuel Maritime Ship" ${stage.transitMode === "Bio-Fuel Maritime Ship" ? "selected" : ""}>Bio-Fuel Maritime Ship</option>
+                                <option value="Diesel Heavy Truck" ${stage.transitMode === "Diesel Heavy Truck" ? "selected" : ""}>Diesel Heavy Truck</option>
+                            </select>
+                        </div>
+                        <div class="col-5">
+                            <input type="text" class="form-control form-control-sm" id="npsCarrier_${idx}" placeholder="Carrier Name" value="${stage.transitCarrier}">
+                        </div>
+                    </div>
+                `}
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+// Reads whatever is currently typed/selected in the stage builder back into newProductStages
+function syncNewProductStagesFromDOM() {
+    newProductStages.forEach((stage, idx) => {
+        const nameInput = document.getElementById(`npsName_${idx}`);
+        if (!nameInput) return;
+
+        stage.name = nameInput.value.trim();
+        stage.desc = document.getElementById(`npsDesc_${idx}`).value.trim();
+        stage.supplierId = document.getElementById(`npsSupplier_${idx}`).value;
+
+        const modeSelect = document.getElementById(`npsMode_${idx}`);
+        const carrierInput = document.getElementById(`npsCarrier_${idx}`);
+        if (modeSelect) stage.transitMode = modeSelect.value;
+        if (carrierInput) stage.transitCarrier = carrierInput.value.trim();
+    });
+}
+
+function addNewProductStage() {
+    syncNewProductStagesFromDOM();
+    newProductStages.push({ name: "", desc: "", supplierId: "", transitMode: "Electric Cargo Train", transitCarrier: "" });
+    renderNewProductStageBuilder();
+}
+
+function removeNewProductStage(index) {
+    syncNewProductStagesFromDOM();
+    if (newProductStages.length <= 1) {
+        showToast("A product needs at least one stage.", "warning");
+        return;
+    }
+    newProductStages.splice(index, 1);
+    renderNewProductStageBuilder();
 }
 
 function saveNewProduct() {
@@ -954,17 +1223,42 @@ function saveNewProduct() {
         return;
     }
 
+    syncNewProductStagesFromDOM();
+
+    for (let i = 0; i < newProductStages.length; i++) {
+        if (!newProductStages[i].name) {
+            showToast(`Please name Stage ${i + 1} before saving.`, "warning");
+            return;
+        }
+    }
+
+    const stages = newProductStages.map((stage, idx) => {
+        const isLastStage = idx === newProductStages.length - 1;
+        let transitToNext = null;
+        if (!isLastStage && stage.transitCarrier) {
+            transitToNext = {
+                mode: stage.transitMode,
+                carrier: stage.transitCarrier,
+                emissions: getEmissionsForMode(stage.transitMode)
+            };
+        }
+
+        return {
+            name: stage.name,
+            desc: stage.desc || "Stage details to be added.",
+            supplierId: stage.supplierId || null,
+            completedDate: null,
+            notes: "",
+            transitToNext: transitToNext
+        };
+    });
+
     const newProduct = {
         id: `PROD-${Date.now().toString().slice(-4)}`,
         name: name,
         batch: batch,
         currentStageIndex: 0,
-        stages: [
-            { name: "1. Raw Materials Sourcing", desc: "Sourcing certified baseline materials", supplierId: "SUP-1", completedDate: null, transitToNext: { mode: "Electric Cargo Train", carrier: "RailGreen India", emissions: "Low" } },
-            { name: "2. Assembly & Manufacturing", desc: "Ethical manufacturing with clean power", supplierId: "SUP-2", completedDate: null, transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" } },
-            { name: "3. Quality & Ethical Inspection", desc: "SDG 8 fair wages and material audit", supplierId: "SUP-3", completedDate: null, transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" } },
-            { name: "4. Packaging & Delivered", desc: "Recycled box packaging delivered to end point", supplierId: "SUP-4", completedDate: null, transitToNext: null }
-        ]
+        stages: stages
     };
 
     appState.products.push(newProduct);
@@ -972,7 +1266,7 @@ function saveNewProduct() {
     saveAppData();
     modalCreateProduct.hide();
     viewProductLifecycle(newProduct.id);
-    showToast(`Product <strong>${name}</strong> added!`, "success");
+    showToast(`Product <strong>${name}</strong> added with ${stages.length} stage(s)!`, "success");
 }
 
 function showToast(msg, type = "success") {

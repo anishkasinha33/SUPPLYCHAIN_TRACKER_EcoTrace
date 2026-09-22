@@ -339,7 +339,7 @@
 
     <!-- Modal: Create New Product -->
     <div class="modal fade" id="modalCreateProduct" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
             <div class="modal-content portal-card border-0">
                 <div class="modal-header border-bottom">
                     <h6 class="modal-title fw-bold">Add New Product to Track</h6>
@@ -354,6 +354,14 @@
                         <label class="form-label small fw-bold">Batch Code</label>
                         <input type="text" class="form-control form-control-sm" id="createProdBatch" placeholder="BATCH-5010" required>
                     </div>
+
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="form-label small fw-bold mb-0">Lifecycle Stages</label>
+                        <button type="button" class="btn btn-sm btn-outline-dark py-0 px-2" onclick="addNewProductStage()">+ Add Stage</button>
+                    </div>
+                    <p class="small text-muted mb-2">Name each stage yourself, pick its supplier, and choose the transport used to reach the next stage. The last stage needs no transport.</p>
+                    <div id="createProdStagesContainer"></div>
                 </div>
                 <div class="modal-footer border-top">
                     <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
