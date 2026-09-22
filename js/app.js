@@ -11,7 +11,9 @@ const DEFAULT_SUPPLIERS = [
     {
         id: "SUP-1",
         name: "GreenTex Mills",
-        country: "Tamil Nadu, India",
+        city: "Coimbatore",
+        state: "Tamil Nadu",
+        country: "India",
         material: "Organic Cotton & Recycled Yarn",
         score: 90,
         checklist: makeChecklist(18),
@@ -25,7 +27,9 @@ const DEFAULT_SUPPLIERS = [
     {
         id: "SUP-2",
         name: "Apex Assembly Hub",
-        country: "Maharashtra, India",
+        city: "Pune",
+        state: "Maharashtra",
+        country: "India",
         material: "Metal Hardware & Fittings",
         score: 90,
         checklist: makeChecklist(18),
@@ -39,7 +43,9 @@ const DEFAULT_SUPPLIERS = [
     {
         id: "SUP-3",
         name: "SafeWorks India Audit",
-        country: "Karnataka, India",
+        city: "Bengaluru",
+        state: "Karnataka",
+        country: "India",
         material: "Audit & Safety Compliance Services",
         score: 95,
         checklist: makeChecklist(19),
@@ -53,7 +59,9 @@ const DEFAULT_SUPPLIERS = [
     {
         id: "SUP-4",
         name: "BioPack Boxes",
-        country: "Gujarat, India",
+        city: "Vapi",
+        state: "Gujarat",
+        country: "India",
         material: "Recycled Cardboard Packaging",
         score: 85,
         checklist: makeChecklist(17),
@@ -67,7 +75,9 @@ const DEFAULT_SUPPLIERS = [
     {
         id: "SUP-5",
         name: "Bamboo Craft Collective",
-        country: "Assam, India",
+        city: "Guwahati",
+        state: "Assam",
+        country: "India",
         material: "Raw Bamboo Cane",
         score: 90,
         checklist: makeChecklist(18),
@@ -638,7 +648,7 @@ function renderDetailedLifecycle() {
             <div class="p-3 rounded border bg-light d-flex flex-wrap justify-content-between align-items-center gap-3">
                 <div class="d-flex flex-column">
                     <span class="text-muted small d-block">Stage Supplier:</span>
-                    <span class="fs-6"><strong>${supplier ? supplier.name : 'None Assigned'}</strong> <span class="text-muted small">(${supplier ? supplier.country : '--'})</span></span>
+                    <span class="fs-6"><strong>${supplier ? supplier.name : 'None Assigned'}</strong> <span class="text-muted small">(${supplier ? supplier.city + ', ' + supplier.state : '--'})</span></span>
                     ${stage.notes ? `<small class="text-secondary mt-1"><i class="text-muted">Note:</i> ${stage.notes}</small>` : ''}
                 </div>
                 <div>
@@ -700,7 +710,8 @@ function viewSupplierProfile(supplierId, editable = true) {
     document.getElementById("profSupName").textContent = sup.name;
     document.getElementById("profSupId").textContent = sup.id;
     document.getElementById("profSupScore").textContent = sup.score;
-    document.getElementById("profSupCountry").textContent = sup.country || "Global";
+    document.getElementById("profSupCity").textContent = sup.city || "Not Specified";
+    document.getElementById("profSupState").textContent = sup.state || "Not Specified";
     document.getElementById("profSupMaterial").textContent = sup.material || "Not Specified";
     document.getElementById("profSupContact").textContent = sup.contact || "Compliance Director";
     document.getElementById("profSupEmail").textContent = sup.email || `contact@${sup.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`;
@@ -876,7 +887,7 @@ function renderSuppliersPage() {
                     <tr>
                         <td><span class="badge bg-light text-dark border">Stage ${item.stageIndex}</span></td>
                         <td class="fw-semibold">${item.stageName}</td>
-                        <td colspan="6" class="text-muted">No supplier assigned</td>
+                        <td colspan="7" class="text-muted">No supplier assigned</td>
                     </tr>
                 `;
             }
@@ -887,7 +898,8 @@ function renderSuppliersPage() {
                     <td class="fw-semibold">${item.stageName}</td>
                     <td class="fw-bold">${sup.name}</td>
                     <td>${sup.material || "--"}</td>
-                    <td>${sup.country}</td>
+                    <td>${sup.city || "--"}</td>
+                    <td>${sup.state || "--"}</td>
                     <td><span class="badge ${badgeClass}">${sup.audit}</span></td>
                     <td><strong>${sup.score}</strong> / 100</td>
                     <td>
@@ -915,7 +927,8 @@ function renderSuppliersPage() {
                             <th>Stage Name</th>
                             <th>Assigned Supplier</th>
                             <th>Material Supplied</th>
-                            <th>Country</th>
+                            <th>City</th>
+                            <th>State</th>
                             <th>SDG 8 Labor Audit</th>
                             <th>Eco Score</th>
                             <th>Action</th>
@@ -941,12 +954,13 @@ function openAssignSupplierModal(stageIndex) {
     dropdown.innerHTML = `<option value="">-- Select Existing Supplier --</option>`;
 
     appState.suppliers.forEach(s => {
-        dropdown.innerHTML += `<option value="${s.id}">${s.name} (${s.country}) - Score: ${s.score}/100 [${s.audit}]</option>`;
+        dropdown.innerHTML += `<option value="${s.id}">${s.name} (${s.city}, ${s.state}) - Score: ${s.score}/100 [${s.audit}]</option>`;
     });
 
     dropdown.value = prod.stages[stageIndex].supplierId || "";
     document.getElementById("newSupName").value = "";
-    document.getElementById("newSupCountry").value = "";
+    document.getElementById("newSupCity").value = "";
+    document.getElementById("newSupState").value = "";
     document.getElementById("newSupMaterial").value = "";
     resetScoreChecklist("assign");
 
@@ -962,13 +976,14 @@ function confirmSupplierAssignment() {
 
     if (newName) {
         const newId = `SUP-${Date.now().toString().slice(-4)}`;
-        const newCountry = document.getElementById("newSupCountry").value.trim() || "International";
+        const newCity = document.getElementById("newSupCity").value.trim() || "Not Specified";
+        const newState = document.getElementById("newSupState").value.trim() || "Not Specified";
         const newMaterial = document.getElementById("newSupMaterial").value.trim() || "Not Specified";
         const newChecklist = getChecklistArray("assign");
         const newScore = getScoreFromChecklist(newChecklist);
         const newAudit = document.getElementById("newSupAudit").value;
 
-        const newSup = { id: newId, name: newName, country: newCountry, material: newMaterial, score: newScore, checklist: newChecklist, audit: newAudit };
+        const newSup = { id: newId, name: newName, city: newCity, state: newState, country: "India", material: newMaterial, score: newScore, checklist: newChecklist, audit: newAudit };
         appState.suppliers.push(newSup);
         prod.stages[activeTargetStageIndex].supplierId = newId;
     } else if (existingSupId) {
@@ -983,7 +998,8 @@ function confirmSupplierAssignment() {
 
 function openCreateSupplierModal() {
     document.getElementById("globalSupName").value = "";
-    document.getElementById("globalSupCountry").value = "";
+    document.getElementById("globalSupCity").value = "";
+    document.getElementById("globalSupState").value = "";
     document.getElementById("globalSupMaterial").value = "";
     resetScoreChecklist("global");
     modalCreateSupplier.show();
@@ -991,7 +1007,8 @@ function openCreateSupplierModal() {
 
 function saveGlobalSupplier() {
     const name = document.getElementById("globalSupName").value.trim();
-    const country = document.getElementById("globalSupCountry").value.trim() || "Global";
+    const city = document.getElementById("globalSupCity").value.trim() || "Not Specified";
+    const state = document.getElementById("globalSupState").value.trim() || "Not Specified";
     const material = document.getElementById("globalSupMaterial").value.trim() || "Not Specified";
     const checklist = getChecklistArray("global");
     const score = getScoreFromChecklist(checklist);
@@ -1003,7 +1020,7 @@ function saveGlobalSupplier() {
     }
 
     const newId = `SUP-${Date.now().toString().slice(-4)}`;
-    appState.suppliers.push({ id: newId, name, country, material, score, checklist, audit });
+    appState.suppliers.push({ id: newId, name, city, state, country: "India", material, score, checklist, audit });
     saveAppData();
     modalCreateSupplier.hide();
     renderSuppliersPage();
@@ -1139,7 +1156,7 @@ function renderNewProductStageBuilder() {
         let supplierOptions = `<option value="">-- No Supplier Yet --</option>`;
         appState.suppliers.forEach(s => {
             const selected = s.id === stage.supplierId ? "selected" : "";
-            supplierOptions += `<option value="${s.id}" ${selected}>${s.name} (${s.country})</option>`;
+            supplierOptions += `<option value="${s.id}" ${selected}>${s.name} (${s.city}, ${s.state})</option>`;
         });
 
         html += `

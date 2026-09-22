@@ -226,10 +226,13 @@
                         <input type="text" class="form-control form-control-sm" id="newSupName" placeholder="Supplier Company Name">
                     </div>
                     <div class="row g-2 mb-2">
-                        <div class="col-6">
-                            <input type="text" class="form-control form-control-sm" id="newSupCountry" placeholder="Country">
+                        <div class="col-4">
+                            <input type="text" class="form-control form-control-sm" id="newSupCity" placeholder="City">
                         </div>
-                        <div class="col-6">
+                        <div class="col-4">
+                            <input type="text" class="form-control form-control-sm" id="newSupState" placeholder="State">
+                        </div>
+                        <div class="col-4">
                             <input type="text" class="form-control form-control-sm" id="newSupMaterial" placeholder="Material Supplied">
                         </div>
                     </div>
@@ -271,11 +274,15 @@
                         <input type="text" class="form-control form-control-sm" id="globalSupName" placeholder="e.g., GreenFabrics Ltd." required>
                     </div>
                     <div class="row g-2 mb-3">
-                        <div class="col-6">
-                            <label class="form-label small fw-bold">Country</label>
-                            <input type="text" class="form-control form-control-sm" id="globalSupCountry" placeholder="Country" required>
+                        <div class="col-4">
+                            <label class="form-label small fw-bold">City</label>
+                            <input type="text" class="form-control form-control-sm" id="globalSupCity" placeholder="e.g., Pune" required>
                         </div>
-                        <div class="col-6">
+                        <div class="col-4">
+                            <label class="form-label small fw-bold">State</label>
+                            <input type="text" class="form-control form-control-sm" id="globalSupState" placeholder="e.g., Maharashtra" required>
+                        </div>
+                        <div class="col-4">
                             <label class="form-label small fw-bold">Material Supplied</label>
                             <input type="text" class="form-control form-control-sm" id="globalSupMaterial" placeholder="e.g., Organic Cotton" required>
                         </div>
@@ -406,8 +413,12 @@
                     <h6 class="fw-bold text-uppercase small text-muted border-bottom pb-2 mb-3">Enterprise Information &amp; Contacts</h6>
                     <div class="row g-3 mb-4">
                         <div class="col-sm-6">
-                            <span class="text-muted small d-block">Operating Region / Country:</span>
-                            <strong id="profSupCountry">Maharashtra, India</strong>
+                            <span class="text-muted small d-block">City:</span>
+                            <strong id="profSupCity">Pune</strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">State:</span>
+                            <strong id="profSupState">Maharashtra</strong>
                         </div>
                         <div class="col-sm-6">
                             <span class="text-muted small d-block">Material Supplied:</span>
