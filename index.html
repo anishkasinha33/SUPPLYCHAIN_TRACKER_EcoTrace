@@ -1,215 +1,490 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>EcoTrace — Sustainable Supply Chain Tracker</title>
-  <meta name="description" content="EcoTrace helps small businesses track sourcing, suppliers, materials and sustainability for every product, and share it with customers.">
-  <meta name="theme-color" content="#123329">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack | Product Journey & Supply Chain Explorer</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231b6b4e'/%3E%3Cpath d='M10 21c0-5.4 3.4-9 9-9.4 0 5.6-3.2 9.4-9 9.4z' fill='white'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Apply the saved theme before first paint to avoid a flash -->
-  <script>
-    (function () {
-      try {
-        var t = localStorage.getItem('ecotrace.theme');
-        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', t);
-      } catch (e) {}
-      try {
-        // Returning, already-onboarded users skip the login screen with no flash.
-        if (localStorage.getItem('ecotrace.account')) document.documentElement.classList.add('ecotrace-authed');
-      } catch (e) {}
-    })();
-  </script>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
-  <!-- Logo glyph: leaf inside circular arrows, with two supply-chain nodes -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-    <symbol id="logo-mark" viewBox="0 0 32 32">
-      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M6.5 15a9.5 9.5 0 0 1 16.2-6.2"/>
-        <path d="M23 4.5v4.8h-4.8"/>
-        <path d="M25.5 17a9.5 9.5 0 0 1-16.2 6.2"/>
-        <path d="M9 27.5v-4.8h4.8"/>
-        <path d="M12.5 19.5l3.5-3.5"/>
-      </g>
-      <path d="M12.5 19.5c0-4.2 2.6-7 7-7.3 0 4.3-2.4 7.3-7 7.3z" fill="currentColor"/>
-      <circle cx="6.5" cy="15" r="1.9" fill="currentColor"/>
-      <circle cx="25.5" cy="17" r="1.9" fill="currentColor"/>
-    </symbol>
-  </svg>
-
-  <a class="skip-link" href="#main">Skip to main content</a>
-
-  <!-- Phone + OTP sign-in and business onboarding (auth.js). Hidden entirely
-       once html.ecotrace-authed is set, either pre-paint (returning users)
-       or on successful sign-in. -->
-  <div id="authRoot" hidden></div>
-
-  <div class="app" id="app">
-
-    <!-- ============ Sidebar ============ -->
-    <aside class="sidebar" id="sidebar" aria-label="Sidebar">
-      <a class="brand" href="#/dashboard" aria-label="EcoTrace home">
-        <span class="brand__mark"><svg viewBox="0 0 32 32" aria-hidden="true"><use href="#logo-mark"/></svg></span>
-        <span class="brand__text">
-          <strong>EcoTrace</strong>
-          <small data-i18n="brand.tagline">Sustainable Supply Chain Tracker</small>
-        </span>
-      </a>
-
-      <nav class="nav" aria-label="Main navigation">
-        <a class="nav__link" href="#/dashboard" data-page="dashboard" title="Dashboard">
-          <i data-lucide="layout-dashboard" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.dashboard">Dashboard</span>
-        </a>
-        <a class="nav__link" href="#/pipeline" data-page="pipeline" title="Pipeline">
-          <i data-lucide="workflow" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.pipeline">Pipeline</span>
-        </a>
-        <a class="nav__link" href="#/products" data-page="products" title="Products">
-          <i data-lucide="package" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.products">Products</span>
-          <span class="nav__count" id="navProductCount"></span>
-        </a>
-        <a class="nav__link" href="#/suppliers" data-page="suppliers" title="Suppliers">
-          <i data-lucide="handshake" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.suppliers">Suppliers</span>
-          <span class="nav__count" id="navSupplierCount"></span>
-        </a>
-        <a class="nav__link" href="#/materials" data-page="materials" title="Materials">
-          <i data-lucide="layers" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.materials">Materials</span>
-        </a>
-        <a class="nav__link" href="#/sustainability" data-page="sustainability" title="Sustainability">
-          <i data-lucide="sprout" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.sustainability">Sustainability</span>
-        </a>
-
-        <a class="nav__link" href="#/providers" data-page="providers" title="Providers">
-          <i data-lucide="search" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.providers">Providers</span>
-        </a>
-
-        <a class="nav__link" href="#/consumer" data-page="consumer" title="Consumer View">
-          <i data-lucide="qr-code" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.consumer">Consumer View</span>
-        </a>
-
-
-        <a class="nav__link" href="#/settings" data-page="settings" title="Settings">
-          <i data-lucide="settings" aria-hidden="true"></i><span class="nav__label" data-i18n="nav.settings">Settings</span>
-        </a>
-      </nav>
-
-      <div class="sidebar__footer">
-        <a class="profile" href="#/settings" title="Business settings">
-          <span class="avatar" data-business-initials>GL</span>
-          <span class="profile__text">
-            <strong data-business-name>GreenLeaf Co.</strong>
-            <small>Business account</small>
-          </span>
-        </a>
-      </div>
-    </aside>
-    <div class="scrim" id="scrim" data-action="close-sidebar"></div>
-
-    <!-- ============ Main shell ============ -->
-    <div class="shell">
-      <header class="topbar">
-        <button class="icon-btn menu-btn" type="button" data-action="toggle-sidebar" aria-label="Open navigation" data-i18n-aria-label="topbar.menu_toggle" aria-expanded="false" aria-controls="sidebar">
-          <i data-lucide="menu" aria-hidden="true"></i>
-        </button>
-
-        <div class="topbar__title">
-          <h1 id="pageTitle">Dashboard</h1>
-          <p id="pageDesc">Your supply chain at a glance</p>
+    <header class="top-navbar text-white d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <span class="fs-5 fw-bold text-white">Eco<span class="text-success">Track</span></span>
+            <span class="text-secondary small d-none d-sm-inline">| Supply Chain Explorer</span>
         </div>
 
-        <div class="topbar__actions">
-          <!-- Global search -->
-          <div class="dropdown-host">
-            <button class="icon-btn" type="button" id="searchToggle" data-action="toggle-dropdown" aria-controls="searchPanel" aria-expanded="false" aria-label="Search products, suppliers and materials" data-i18n-aria-label="topbar.search_aria" title="Search (Ctrl K)">
-              <i data-lucide="search" aria-hidden="true"></i>
-            </button>
-            <div class="dropdown dropdown--search" id="searchPanel">
-              <div class="search-field">
-                <i data-lucide="search" aria-hidden="true"></i>
-                <input id="globalSearch" type="search" placeholder="Search products, suppliers, materials" data-i18n-placeholder="topbar.search_placeholder" autocomplete="off" aria-label="Search" aria-controls="searchResults" aria-expanded="false" role="combobox" aria-autocomplete="list">
-                <kbd>Esc</kbd>
-              </div>
-              <div class="search-results" id="searchResults" role="listbox" aria-label="Search results"></div>
+        <nav class="d-flex gap-2">
+            <button class="nav-btn active" id="tabBtnHome" onclick="navigateToPage('home')">Home</button>
+            <button class="nav-btn" id="tabBtnProducts" onclick="navigateToPage('products')">Products Listing</button>
+            <button class="nav-btn" id="tabBtnSuppliers" onclick="navigateToPage('suppliers')">Suppliers by Product</button>
+            <button class="nav-btn" id="tabBtnSdg" onclick="navigateToPage('sdg')">About &amp; SDG Scoring</button>
+        </nav>
+    </header>
+
+    <main class="container py-4">
+        <!-- Global Notification Container -->
+        <div id="statusNotification"></div>
+
+        <!-- =================== PAGE 1: HOME =================== -->
+        <section id="pageHome">
+            <div class="portal-card p-4 mb-4" style="background: linear-gradient(135deg, #f0fdfa 0%, #ffffff 100%); border-left: 5px solid #0f766e;">
+                <h3 class="fw-bold text-dark mb-1">Welcome to EcoTrack Portal</h3>
+                <p class="text-muted mb-3">Monitor end-to-end product lifecycles, inspect verified suppliers, and audit transit logistics under UN SDGs 8 and 12.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-dark btn-sm px-3" onclick="navigateToPage('products')">View Products &amp; Lifecycles &rarr;</button>
+                    <button class="btn btn-outline-dark btn-sm px-3" onclick="navigateToPage('suppliers')">Explore Suppliers by Product &rarr;</button>
+                </div>
             </div>
-          </div>
 
-          <!-- Language toggle (English / हिन्दी) -->
-          <button class="icon-btn lang-btn" type="button" id="langToggle" aria-label="Switch language" data-i18n-aria-label="topbar.lang_toggle" title="English / हिन्दी">EN</button>
-
-          <button class="icon-btn" type="button" id="themeToggle" data-action="toggle-theme" aria-label="Switch to dark mode" title="Toggle theme"></button>
-
-          <!-- Notifications -->
-          <div class="dropdown-host">
-            <button class="icon-btn" type="button" id="notifToggle" data-action="toggle-dropdown" aria-controls="notifPanel" aria-expanded="false" aria-label="Notifications" data-i18n-aria-label="topbar.notifications">
-              <i data-lucide="bell" aria-hidden="true"></i>
-              <span class="dot-badge" id="notifBadge" hidden>0</span>
-            </button>
-            <div class="dropdown dropdown--notif" id="notifPanel"></div>
-          </div>
-
-          <!-- Business profile -->
-          <div class="dropdown-host">
-            <button class="profile-btn" type="button" data-action="toggle-dropdown" aria-controls="profilePanel" aria-expanded="false" aria-label="Business menu">
-              <span class="avatar avatar--sm" data-business-initials>GL</span>
-              <span class="profile-btn__name" data-business-name>GreenLeaf Co.</span>
-              <i data-lucide="chevron-down" aria-hidden="true"></i>
-            </button>
-            <div class="dropdown dropdown--menu" id="profilePanel">
-              <a class="menu-item" href="#/settings"><i data-lucide="settings" aria-hidden="true"></i><span data-i18n="topbar.menu_business_settings">Business settings</span></a>
-              <a class="menu-item" href="#/consumer"><i data-lucide="qr-code" aria-hidden="true"></i><span data-i18n="topbar.menu_consumer_view">Consumer view</span></a>
-              <button class="menu-item" type="button" data-action="toggle-theme"><i data-lucide="moon" aria-hidden="true"></i><span data-i18n="topbar.menu_switch_theme">Switch theme</span></button>
-              <div class="menu-sep"></div>
-              <button class="menu-item" type="button" data-action="export-data"><i data-lucide="download" aria-hidden="true"></i><span data-i18n="topbar.menu_export">Export data</span></button>
+            <div class="row g-3 mb-4">
+                <div class="col-md-3 col-6">
+                    <div class="portal-card p-3">
+                        <small class="text-muted text-uppercase fw-bold">Active Products</small>
+                        <h2 class="fw-bold my-2" id="homeKpiProducts">0</h2>
+                        <span class="text-muted small">Tracking in system</span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="portal-card p-3">
+                        <small class="text-muted text-uppercase fw-bold">Total Suppliers</small>
+                        <h2 class="fw-bold my-2 text-primary" id="homeKpiSuppliers">0</h2>
+                        <span class="text-muted small">Across all stages</span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="portal-card p-3">
+                        <small class="text-muted text-uppercase fw-bold">Avg Eco Score</small>
+                        <h2 class="fw-bold my-2 text-success" id="homeKpiScore">0/100</h2>
+                        <span class="text-muted small">Supply chain rating</span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="portal-card p-3">
+                        <small class="text-muted text-uppercase fw-bold">Delivered Items</small>
+                        <h2 class="fw-bold my-2 text-secondary" id="homeKpiDelivered">0</h2>
+                        <span class="text-muted small">Completed journeys</span>
+                    </div>
+                </div>
             </div>
-          </div>
+
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="portal-card p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0 text-uppercase small text-muted">Quick Product Status</h6>
+                            <button class="btn btn-sm btn-outline-primary py-0" onclick="navigateToPage('products')">All Products</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-sm align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Batch</th>
+                                        <th>Current Milestone</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="homeProductsTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="portal-card p-3 h-100">
+                        <h6 class="fw-bold mb-3 text-uppercase small text-muted">SDG Targets Enforced</h6>
+                        <div class="mb-3">
+                            <strong class="text-primary d-block small mb-1">SDG 8: Decent Work (Target 8.8)</strong>
+                            <p class="small text-muted mb-0">Suppliers undergo Fair Trade and ISO standard audits before products can move to the next stage.</p>
+                        </div>
+                        <hr>
+                        <div>
+                            <strong class="text-success d-block small mb-1">SDG 12: Responsible Production (Target 12.5)</strong>
+                            <p class="small text-muted mb-0">Tracks transportation carbon footprints between milestone nodes, prioritizing low-emission carriers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================== PAGE 2: PRODUCTS & LIFECYCLE =================== -->
+        <section id="pageProducts" class="d-none">
+            <!-- View Mode A: Product Cards List -->
+            <div id="productsListView">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <div>
+                        <h4 class="fw-bold mb-0">Tracked Products</h4>
+                        <p class="text-muted small mb-0">Select any product to inspect its complete lifecycle journey, milestone status, and transit nodes.</p>
+                    </div>
+                    <button class="btn btn-dark btn-sm px-3" onclick="openNewProductModal()">+ Add New Product</button>
+                </div>
+
+                <div class="row g-3" id="productsCardsGrid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- View Mode B: Detailed Lifecycle Journey Screen -->
+            <div id="productDetailView" class="d-none">
+                <!-- Top Detail Header -->
+                <div class="portal-card p-3 mb-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="btn btn-outline-secondary btn-sm" onclick="returnToProductsList()">&larr; Back to Products</button>
+                            <div>
+                                <h4 class="fw-bold mb-0" id="detailProdName">Product Title</h4>
+                                <span class="badge bg-secondary" id="detailProdBatch">BATCH-0000</span>
+                                <span class="badge bg-success ms-1" id="detailProdEcoScore">Eco Score: 90/100</span>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-primary btn-sm px-3" id="btnAdvanceMilestone" onclick="advanceActiveMilestone()">Advance Next Milestone &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explanation Banner -->
+                <div class="alert alert-light border py-2 px-3 small mb-4">
+                    <strong>Milestone Journey:</strong> Follow the stages from start to finish. Check the status bar on each box for dates, and click any transit badge between boxes to update shipping carriers.
+                </div>
+
+                <!-- Large Stage Boxes and Directional Arrows -->
+                <div id="detailMilestonesContainer" class="d-flex flex-column">
+                    <!-- Rendered dynamically via renderDetailedLifecycle() -->
+                </div>
+            </div>
+        </section>
+
+        <!-- =================== PAGE 3: SUPPLIERS BY PRODUCT =================== -->
+        <section id="pageSuppliers" class="d-none">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                <div>
+                    <h4 class="fw-bold mb-0">Suppliers Segregated by Product</h4>
+                    <p class="text-muted small mb-0">View all suppliers associated with each specific product and register new suppliers.</p>
+                </div>
+                <button class="btn btn-dark btn-sm px-3" onclick="openCreateSupplierModal()">+ Register New Supplier</button>
+            </div>
+
+            <div id="suppliersByProductContainer" class="d-flex flex-column gap-4">
+                <!-- Grouped Product Suppliers Tables rendered dynamically -->
+            </div>
+        </section>
+
+        <!-- =================== PAGE 4: ABOUT & SDG SCORING =================== -->
+        <section id="pageSdg" class="d-none">
+            <div class="portal-card p-4 mb-4" style="background: linear-gradient(135deg, #f0fdfa 0%, #ffffff 100%); border-left: 5px solid #0f766e;">
+                <h3 class="fw-bold text-dark mb-1">About EcoTrack</h3>
+                <p class="text-muted mb-0">EcoTrack exists so buyers can see exactly how ethical and sustainable each supplier in a product's journey really is, instead of trusting a made-up number. Every supplier's Eco Score is built from a public checklist of real, verifiable practices tied to two United Nations Sustainable Development Goals &mdash; so anyone can see exactly why a supplier scored the way they did, and what they'd need to improve.</p>
+            </div>
+
+            <div class="row g-4 mb-4">
+                <div class="col-md-6">
+                    <div class="portal-card p-3 h-100">
+                        <strong class="text-primary d-block mb-1">SDG 8: Decent Work &amp; Economic Growth (Target 8.8)</strong>
+                        <p class="small text-muted mb-0">Focuses on protecting labor rights and promoting safe, secure working environments for all workers, including fair pay, no child or forced labor, and safe factory conditions.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="portal-card p-3 h-100">
+                        <strong class="text-success d-block mb-1">SDG 12: Responsible Consumption &amp; Production (Target 12.5)</strong>
+                        <p class="small text-muted mb-0">Focuses on reducing waste through recycling, cutting pollution from production and transport, and moving supply chains toward cleaner materials and logistics.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portal-card p-4">
+                <h5 class="fw-bold mb-1">How the Eco Score is Calculated</h5>
+                <p class="text-muted small mb-3">Every supplier is scored out of <strong>100 points</strong> using a 20-point checklist. Each item a supplier can verifiably tick off is worth <strong>5 points</strong>. Scores are edited from the Suppliers tab so they always stay up to date and auditable.</p>
+                <div id="sdgScoringChecklistView">
+                    <!-- Populated dynamically from SCORE_CHECKLIST -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal: Add or Change Supplier at Stage -->
+    <div class="modal fade" id="modalAssignSupplier" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content portal-card border-0">
+                <div class="modal-header border-bottom">
+                    <h6 class="modal-title fw-bold">Assign Supplier for Stage: <span id="assignStageName" class="text-primary"></span></h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Select Existing Supplier</label>
+                        <select class="form-select form-select-sm" id="dropdownExistingSuppliers"></select>
+                    </div>
+                    <hr>
+                    <h6 class="small fw-bold text-muted mb-2">Or Register New Supplier (SDG 8)</h6>
+                    <div class="mb-2">
+                        <input type="text" class="form-control form-control-sm" id="newSupName" placeholder="Supplier Company Name">
+                    </div>
+                    <div class="row g-2 mb-2">
+                        <div class="col-6">
+                            <input type="text" class="form-control form-control-sm" id="newSupCountry" placeholder="Country">
+                        </div>
+                        <div class="col-6">
+                            <input type="text" class="form-control form-control-sm" id="newSupMaterial" placeholder="Material Supplied">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <select class="form-select form-select-sm" id="newSupAudit">
+                            <option value="Fair Trade Certified">Fair Trade Certified (SDG 8)</option>
+                            <option value="ISO 14001 Audited">ISO 14001 Audited</option>
+                            <option value="Unverified / High Risk">Unverified / High Risk</option>
+                        </select>
+                    </div>
+
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <h6 class="small fw-bold text-muted mb-0">Sustainability Score Checklist</h6>
+                        <span class="badge bg-success">Score: <span id="assignScoreDisplay">0</span> / 100</span>
+                    </div>
+                    <p class="small text-muted mb-2">Tick every practice this supplier follows. Each ticked box adds 5 points.</p>
+                    <div id="assignScoreChecklist"></div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="confirmSupplierAssignment()">Save to Stage</button>
+                </div>
+            </div>
         </div>
-      </header>
-
-      <main class="main" id="main" tabindex="-1">
-        <section class="page" id="page-dashboard" data-page="dashboard" aria-label="Dashboard" hidden></section>
-        <section class="page" id="page-pipeline" data-page="pipeline" aria-label="Pipeline" hidden></section>
-        <section class="page" id="page-products" data-page="products" aria-label="Products" hidden></section>
-        <section class="page" id="page-suppliers" data-page="suppliers" aria-label="Suppliers" hidden></section>
-        <section class="page" id="page-materials" data-page="materials" aria-label="Materials" hidden></section>
-        <section class="page" id="page-sustainability" data-page="sustainability" aria-label="Sustainability" hidden></section>
-        <section class="page" id="page-providers" data-page="providers" aria-label="Providers" hidden></section>
-        <section class="page" id="page-consumer" data-page="consumer" aria-label="Consumer view" hidden></section>
-        <section class="page" id="page-settings" data-page="settings" aria-label="Settings" hidden></section>
-      </main>
     </div>
-  </div>
 
-  <button class="preview-exit" id="previewExit" type="button" data-action="exit-preview" hidden>
-    <i data-lucide="x" aria-hidden="true"></i>Exit preview
-  </button>
+    <!-- Modal: Register Global Supplier -->
+    <div class="modal fade" id="modalCreateSupplier" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content portal-card border-0">
+                <div class="modal-header border-bottom">
+                    <h6 class="modal-title fw-bold">Register Global Supplier (SDG 8)</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Supplier Company Name</label>
+                        <input type="text" class="form-control form-control-sm" id="globalSupName" placeholder="e.g., GreenFabrics Ltd." required>
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Country</label>
+                            <input type="text" class="form-control form-control-sm" id="globalSupCountry" placeholder="Country" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Material Supplied</label>
+                            <input type="text" class="form-control form-control-sm" id="globalSupMaterial" placeholder="e.g., Organic Cotton" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Audit Standard</label>
+                        <select class="form-select form-select-sm" id="globalSupAudit">
+                            <option value="Fair Trade Certified">Fair Trade Certified (SDG 8)</option>
+                            <option value="ISO 14001 Audited">ISO 14001 Audited</option>
+                            <option value="Unverified / High Risk">Unverified / High Risk</option>
+                        </select>
+                    </div>
 
-  <div id="modalRoot"></div>
-  <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="false"></div>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <h6 class="small fw-bold text-muted mb-0">Sustainability Score Checklist</h6>
+                        <span class="badge bg-success">Score: <span id="globalScoreDisplay">0</span> / 100</span>
+                    </div>
+                    <p class="small text-muted mb-2">Tick every practice this supplier follows. Each ticked box adds 5 points.</p>
+                    <div id="globalScoreChecklist"></div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-dark" onclick="saveGlobalSupplier()">Save Supplier</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <script src="https://unpkg.com/lucide@1.47.0/dist/umd/lucide.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
-  <!-- Additive modules: i18n dictionary + provider directory + pipeline
-       must all be parsed before script.js's own init() runs — its
-       renderCurrentPage() builds a `renderers` object literal referencing
-       renderProviders/renderPipeline by name, and those identifiers must
-       already exist the first time that literal is evaluated (at load,
-       not just by the time they're actually called). auth.js runs last so
-       it can safely extend the already-defined app (state, renderSettings);
-       providers.js/pipeline.js only call window.EcoTraceAuth from inside
-       functions invoked later at render time, so load order doesn't matter
-       for that part. -->
-  <script src="i18n.js" defer></script>
-  <script src="providers.js" defer></script>
-  <script src="pipeline.js" defer></script>
-  <script src="script.js" defer></script>
-  <script src="auth.js" defer></script>
+    <!-- Modal: Change Transportation Provider -->
+    <div class="modal fade" id="modalChangeTransit" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content portal-card border-0">
+                <div class="modal-header border-bottom">
+                    <h6 class="modal-title fw-bold">Logistics &amp; Transport Mode (SDG 12)</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="transitStageIdx">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Choose Transport Mode</label>
+                        <select class="form-select form-select-sm" id="transitModeSelect">
+                            <option value="Electric Cargo Train">Electric Cargo Train (Ultra-Low Carbon: 12g CO2/km)</option>
+                            <option value="Electric Delivery Van">Electric Delivery Van (Zero Direct Emissions)</option>
+                            <option value="Bio-Fuel Maritime Ship">Bio-Fuel Maritime Ship (Moderate Emissions)</option>
+                            <option value="Diesel Heavy Truck">Diesel Heavy Truck (High Carbon: 110g CO2/km)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Logistics Carrier Name</label>
+                        <input type="text" class="form-control form-control-sm" id="transitCarrierName" placeholder="e.g. GreenPath Freight Lines">
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-dark" onclick="saveTransitChange()">Update Route</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Create New Product -->
+    <div class="modal fade" id="modalCreateProduct" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content portal-card border-0">
+                <div class="modal-header border-bottom">
+                    <h6 class="modal-title fw-bold">Add New Product to Track</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Product Title</label>
+                        <input type="text" class="form-control form-control-sm" id="createProdName" placeholder="e.g., Organic Canvas Backpack" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Batch Code</label>
+                        <input type="text" class="form-control form-control-sm" id="createProdBatch" placeholder="BATCH-5010" required>
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-dark" onclick="saveNewProduct()">Create Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Complete Supplier Profile View -->
+    <div class="modal fade" id="modalSupplierProfile" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+            <div class="modal-content portal-card border-0">
+                <div class="modal-header bg-dark text-white border-bottom">
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0" id="profSupName">Supplier Profile</h5>
+                        <span class="small text-secondary" id="profSupId">SUP-0000</span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded bg-light text-center h-100">
+                                <span class="text-muted small d-block mb-1">Eco Score</span>
+                                <h2 class="fw-bold text-success mb-0" id="profSupScore">90</h2>
+                                <span class="badge bg-success-subtle text-success border mt-1">Tier-1 Verified</span>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="p-3 border rounded bg-light h-100">
+                                <span class="text-muted small d-block mb-1">SDG 8 Labor &amp; Ethical Audit</span>
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <span class="badge bg-success" id="profSupAuditBadge">Fair Trade Certified</span>
+                                    <span class="small text-muted" id="profSupCertId">Cert #FT-88902</span>
+                                </div>
+                                <p class="small text-muted mb-0" id="profSupAuditDesc">Meets UN SDG 8.8 decent work criteria, living wage verification, and zero child labor standards.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-uppercase small text-muted border-bottom pb-2 mb-3">Enterprise Information &amp; Contacts</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Operating Region / Country:</span>
+                            <strong id="profSupCountry">Portugal</strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Material Supplied:</span>
+                            <strong id="profSupMaterial">--</strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Lead Compliance Officer:</span>
+                            <strong id="profSupContact">Maria Santos</strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Official Email:</span>
+                            <span id="profSupEmail">contact@supplier.org</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Renewable Energy Utilization:</span>
+                            <strong class="text-success" id="profSupEnergy">100% Solar &amp; Wind</strong>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-uppercase small text-muted border-bottom pb-2 mb-2">Associated Supply Chain Roles</h6>
+                    <div id="profSupSuppliedStages" class="small text-muted mb-4">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <div id="profScoreEditSection">
+                        <h6 class="fw-bold text-uppercase small text-muted border-bottom pb-2 mb-2">Edit Sustainability Score</h6>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="small text-muted">Tick every practice this supplier follows. Each ticked box adds 5 points.</span>
+                            <span class="badge bg-success">Score: <span id="profScoreDisplay">0</span> / 100</span>
+                        </div>
+                        <div id="profScoreChecklist"></div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" id="profCancelBtn" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="profSaveScoreBtn" class="btn btn-sm btn-success px-3" onclick="saveSupplierProfileScore()">Save Score</button>
+                    <button type="button" id="profEditRedirectBtn" class="btn btn-sm btn-primary px-3 d-none" onclick="editSupplierFromProductsTab()">Edit Supplier Details &rarr;</button>
+                    <button type="button" class="btn btn-sm btn-dark px-3" data-bs-dismiss="modal">Close Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Direct Stage Status Update -->
+    <div class="modal fade" id="modalUpdateStageStatus" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content portal-card border-0">
+                <div class="modal-header border-bottom">
+                    <h6 class="modal-title fw-bold">Update Milestone Status</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editStageIdx">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Milestone Name</label>
+                        <input type="text" class="form-control form-control-sm bg-light" id="editStageName" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Stage Lifecycle Status</label>
+                        <select class="form-select form-select-sm" id="editStageState">
+                            <option value="done">Completed</option>
+                            <option value="current">In Progress (Current Active)</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Completion / Target Date</label>
+                        <input type="text" class="form-control form-control-sm" id="editStageDate" placeholder="e.g., Sep 22, 2026">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Milestone Audit Notes</label>
+                        <textarea class="form-control form-control-sm" id="editStageNotes" rows="2" placeholder="Quality checks, living wage validation, or transit sign-off..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="confirmStageStatusUpdate()">Update Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JavaScript Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="js/app.js"></script>
 </body>
 </html>

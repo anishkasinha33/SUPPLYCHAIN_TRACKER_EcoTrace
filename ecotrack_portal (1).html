@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack | Product Journey & Supply Chain Explorer</title>
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --border-subtle: #cbd5e1;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --color-card: #ffffff;
+            --color-accent: #0f766e;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+        }
+
+        /* Top Header Navbar */
+        .top-navbar {
+            background-color: #0f172a;
+            border-bottom: 2px solid #334155;
+            padding: 0.75rem 1.5rem;
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            padding: 0.4rem 0.9rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.15s ease-in-out;
+        }
+
+        .nav-btn:hover {
+            color: #ffffff;
+            background-color: #1e293b;
+        }
+
+        .nav-btn.active {
+            color: #ffffff;
+            background-color: #0f766e;
+            border-color: #14b8a6;
+        }
+
+        /* Standard Containers & Cards */
+        .portal-card {
+            background-color: var(--color-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Large Milestone Stage Boxes */
+        .milestone-box {
+            background-color: #ffffff;
+            border: 2px solid #94a3b8;
+            border-radius: 10px;
+            padding: 1.5rem;
+            position: relative;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .milestone-box.done {
+            border-color: #16a34a;
+            background-color: #fcfdfc;
+        }
+
+        .milestone-box.current {
+            border-color: #0284c7;
+            background-color: #f8fafc;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.12);
+        }
+
+        .milestone-box.pending {
+            border-color: #cbd5e1;
+            background-color: #f8fafc;
+            opacity: 0.85;
+        }
+
+        /* Milestone Status Bar */
+        .milestone-status-bar {
+            border-radius: 6px;
+            padding: 0.4rem 0.75rem;
+            font-size: 0.82rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-done {
+            background-color: #dcfce7;
+            color: #15803d;
+            border: 1px solid #86efac;
+        }
+
+        .status-current {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            border: 1px solid #7dd3fc;
+        }
+
+        .status-pending {
+            background-color: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #cbd5e1;
+        }
+
+        /* Directional Transition Arrow Divider */
+        .stage-arrow-divider {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0.5rem 0;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .arrow-line {
+            width: 3px;
+            height: 24px;
+            background-color: #94a3b8;
+        }
+
+        .arrow-icon-badge {
+            background-color: #ffffff;
+            border: 2px solid #94a3b8;
+            border-radius: 20px;
+            padding: 0.35rem 1rem;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #1e293b;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            margin: 4px 0;
+        }
+
+        .arrow-icon-badge:hover {
+            border-color: #0f766e;
+            background-color: #f0fdfa;
+        }
+
+        .arrow-head {
+            width: 0; 
+            height: 0; 
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 10px solid #94a3b8;
+        }
+
+        .product-card-item {
+            cursor: pointer;
+            transition: all 0.15s ease-in-out;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+        }
+
+        .product-card-item:hover {
+            border-color: #0f766e;
+            background-color: #f8fafc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-navbar text-white d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div class="d-flex align-items-center gap-3">
+            <span class="fs-5 fw-bold text-white">Eco<span class="text-success">Track</span></span>
+            <span class="text-secondary small d-none d-sm-inline">| Supply Chain Explorer</span>
+        </div>
+
+        <nav class="d-flex gap-2">
+            <button class="nav-btn active" id="tabBtnHome" onclick="navigateToPage('home')">Home</button>
+            <button class="nav-btn" id="tabBtnProducts" onclick="navigateToPage('products')">Products Listing</button>
+            <button class="nav-btn" id="tabBtnSuppliers" onclick="navigateToPage('suppliers')">Suppliers by Product</button>
+        </nav>
+
+        <div>
+            <button class="btn btn-sm btn-outline-secondary text-white-50" onclick="restoreDemoData()">Reset Data</button>
+        </div>
+    </header>
+
+    <main class="container py-4">
+        <!-- Global Notification Container -->
+        <div id="statusNotification"></div>
+
+        <!-- =================== PAGE 1: HOME =================== -->
+        <section id="pageHome">
+            <div class="portal-card p-4 mb-4" style="background: linear-gradient(135deg, #f0fdfa 0%, #ffffff 100%); border-left: 5px solid #0f766e;">
+                <h3 class="fw-bold text-dark mb-1">Welcome to EcoTrack Portal</h3>
+                <p class="text-muted mb-3">Monitor end-to-end product lifecycles, inspect verified suppliers, and audit transit logistics under UN SDGs 8 and 12.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-dark btn-sm px-3" onclick="navigateToPage('products')">View Products &amp; Lifecycles &rarr;</button>
+                    <button class="btn btn-outline-dark btn-sm px-3" onclick="navigateToPage('suppliers')">Explore Suppliers by Product &rarr;</button>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-3 col-6">
+                    <div class="portal-card p-3">
+                        <small class="text-muted text-uppercase fw-bold">Active Products</small>
+                        <h2 class="fw-bold my-2" id="homeKpiProducts">0</h2>
+                        <span class="text-muted small">Tracking in system</span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="portal-card p-3">
+                        <small class="text-muted text-uppercase fw-bold">Total Suppliers</small>
+                        <h2 class="fw-bold my-2 text-primary" id="homeKpiSuppliers">0</h2>
+                        <span class="text-muted small">Across all stages</span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="portal-card p-3">
+                        <small class="text-muted text-uppercase fw-bold">Avg Eco Score</small>
+                        <h2 class="fw-bold my-2 text-success" id="homeKpiScore">0/100</h2>
+                        <span class="text-muted small">Supply chain rating</span>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="portal-card p-3">
+                        <small class="text-muted text-uppercase fw-bold">Delivered Items</small>
+                        <h2 class="fw-bold my-2 text-secondary" id="homeKpiDelivered">0</h2>
+                        <span class="text-muted small">Completed journeys</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="portal-card p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0 text-uppercase small text-muted">Quick Product Status</h6>
+                            <button class="btn btn-sm btn-outline-primary py-0" onclick="navigateToPage('products')">All Products</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-sm align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Batch</th>
+                                        <th>Current Milestone</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="homeProductsTableBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="portal-card p-3 h-100">
+                        <h6 class="fw-bold mb-3 text-uppercase small text-muted">SDG Targets Enforced</h6>
+                        <div class="mb-3">
+                            <strong class="text-primary d-block small mb-1">SDG 8: Decent Work (Target 8.8)</strong>
+                            <p class="small text-muted mb-0">Suppliers undergo Fair Trade and ISO standard audits before products can move to the next stage.</p>
+                        </div>
+                        <hr>
+                        <div>
+                            <strong class="text-success d-block small mb-1">SDG 12: Responsible Production (Target 12.5)</strong>
+                            <p class="small text-muted mb-0">Tracks transportation carbon footprints between milestone nodes, prioritizing low-emission carriers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================== PAGE 2: PRODUCTS & LIFECYCLE =================== -->
+        <section id="pageProducts" class="d-none">
+            <!-- View Mode A: Product Cards List -->
+            <div id="productsListView">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                    <div>
+                        <h4 class="fw-bold mb-0">Tracked Products</h4>
+                        <p class="text-muted small mb-0">Select any product to inspect its complete lifecycle journey, milestone status, and transit nodes.</p>
+                    </div>
+                    <button class="btn btn-dark btn-sm px-3" onclick="openNewProductModal()">+ Add New Product</button>
+                </div>
+
+                <div class="row g-3" id="productsCardsGrid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- View Mode B: Detailed Lifecycle Journey Screen -->
+            <div id="productDetailView" class="d-none">
+                <!-- Top Detail Header -->
+                <div class="portal-card p-3 mb-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="btn btn-outline-secondary btn-sm" onclick="returnToProductsList()">&larr; Back to Products</button>
+                            <div>
+                                <h4 class="fw-bold mb-0" id="detailProdName">Product Title</h4>
+                                <span class="badge bg-secondary" id="detailProdBatch">BATCH-0000</span>
+                                <span class="badge bg-success ms-1" id="detailProdEcoScore">Eco Score: 90/100</span>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-primary btn-sm px-3" id="btnAdvanceMilestone" onclick="advanceActiveMilestone()">Advance Next Milestone &rarr;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explanation Banner -->
+                <div class="alert alert-light border py-2 px-3 small mb-4">
+                    <strong>Milestone Journey:</strong> Follow the stages from start to finish. Check the status bar on each box for dates, and click any transit badge between boxes to update shipping carriers.
+                </div>
+
+                <!-- Large Stage Boxes and Directional Arrows -->
+                <div id="detailMilestonesContainer" class="d-flex flex-column">
+                    <!-- Rendered dynamically via renderDetailedLifecycle() -->
+                </div>
+            </div>
+        </section>
+
+        <!-- =================== PAGE 3: SUPPLIERS BY PRODUCT =================== -->
+        <section id="pageSuppliers" class="d-none">
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                <div>
+                    <h4 class="fw-bold mb-0">Suppliers Segregated by Product</h4>
+                    <p class="text-muted small mb-0">View all suppliers associated with each specific product and register new suppliers.</p>
+                </div>
+                <button class="btn btn-dark btn-sm px-3" onclick="openCreateSupplierModal()">+ Register New Supplier</button>
+            </div>
+
+            <div id="suppliersByProductContainer" class="d-flex flex-column gap-4">
+                <!-- Grouped Product Suppliers Tables rendered dynamically -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal: Add or Change Supplier at Stage -->
+    <div class="modal fade" id="modalAssignSupplier" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content portal-card border-0">
+                <div class="modal-header border-bottom">
+                    <h6 class="modal-title fw-bold">Assign Supplier for Stage: <span id="assignStageName" class="text-primary"></span></h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Select Existing Supplier</label>
+                        <select class="form-select form-select-sm" id="dropdownExistingSuppliers"></select>
+                    </div>
+                    <hr>
+                    <h6 class="small fw-bold text-muted mb-2">Or Register New Supplier (SDG 8)</h6>
+                    <div class="mb-2">
+                        <input type="text" class="form-control form-control-sm" id="newSupName" placeholder="Supplier Company Name">
+                    </div>
+                    <div class="row g-2 mb-2">
+                        <div class="col-6">
+                            <input type="text" class="form-control form-control-sm" id="newSupCountry" placeholder="Country">
+                        </div>
+                        <div class="col-6">
+                            <input type="number" class="form-control form-control-sm" id="newSupScore" min="0" max="100" placeholder="Eco Score (0-100)">
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <select class="form-select form-select-sm" id="newSupAudit">
+                            <option value="Fair Trade Certified">Fair Trade Certified (SDG 8)</option>
+                            <option value="ISO 14001 Audited">ISO 14001 Audited</option>
+                            <option value="Unverified / High Risk">Unverified / High Risk</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="confirmSupplierAssignment()">Save to Stage</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Register Global Supplier -->
+    <div class="modal fade" id="modalCreateSupplier" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content portal-card border-0">
+                <div class="modal-header border-bottom">
+                    <h6 class="modal-title fw-bold">Register Global Supplier (SDG 8)</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Supplier Company Name</label>
+                        <input type="text" class="form-control form-control-sm" id="globalSupName" placeholder="e.g., GreenFabrics Ltd." required>
+                    </div>
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Country</label>
+                            <input type="text" class="form-control form-control-sm" id="globalSupCountry" placeholder="Country" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold">Eco Score (0-100)</label>
+                            <input type="number" class="form-control form-control-sm" id="globalSupScore" min="0" max="100" value="85" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Audit Standard</label>
+                        <select class="form-select form-select-sm" id="globalSupAudit">
+                            <option value="Fair Trade Certified">Fair Trade Certified (SDG 8)</option>
+                            <option value="ISO 14001 Audited">ISO 14001 Audited</option>
+                            <option value="Unverified / High Risk">Unverified / High Risk</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-dark" onclick="saveGlobalSupplier()">Save Supplier</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Change Transportation Provider -->
+    <div class="modal fade" id="modalChangeTransit" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content portal-card border-0">
+                <div class="modal-header border-bottom">
+                    <h6 class="modal-title fw-bold">Logistics &amp; Transport Mode (SDG 12)</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="transitStageIdx">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Choose Transport Mode</label>
+                        <select class="form-select form-select-sm" id="transitModeSelect">
+                            <option value="Electric Cargo Train">Electric Cargo Train (Ultra-Low Carbon: 12g CO2/km)</option>
+                            <option value="Electric Delivery Van">Electric Delivery Van (Zero Direct Emissions)</option>
+                            <option value="Bio-Fuel Maritime Ship">Bio-Fuel Maritime Ship (Moderate Emissions)</option>
+                            <option value="Diesel Heavy Truck">Diesel Heavy Truck (High Carbon: 110g CO2/km)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Logistics Carrier Name</label>
+                        <input type="text" class="form-control form-control-sm" id="transitCarrierName" placeholder="e.g. GreenPath Freight Lines">
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-dark" onclick="saveTransitChange()">Update Route</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Create New Product -->
+    <div class="modal fade" id="modalCreateProduct" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content portal-card border-0">
+                <div class="modal-header border-bottom">
+                    <h6 class="modal-title fw-bold">Add New Product to Track</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Product Title</label>
+                        <input type="text" class="form-control form-control-sm" id="createProdName" placeholder="e.g., Organic Canvas Backpack" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Batch Code</label>
+                        <input type="text" class="form-control form-control-sm" id="createProdBatch" placeholder="BATCH-5010" required>
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-dark" onclick="saveNewProduct()">Create Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Complete Supplier Profile View -->
+    <div class="modal fade" id="modalSupplierProfile" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content portal-card border-0">
+                <div class="modal-header bg-dark text-white border-bottom">
+                    <div>
+                        <h5 class="modal-title fw-bold mb-0" id="profSupName">Supplier Profile</h5>
+                        <span class="small text-secondary" id="profSupId">SUP-0000</span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="p-3 border rounded bg-light text-center h-100">
+                                <span class="text-muted small d-block mb-1">Eco Score</span>
+                                <h2 class="fw-bold text-success mb-0" id="profSupScore">90</h2>
+                                <span class="badge bg-success-subtle text-success border mt-1">Tier-1 Verified</span>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="p-3 border rounded bg-light h-100">
+                                <span class="text-muted small d-block mb-1">SDG 8 Labor &amp; Ethical Audit</span>
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <span class="badge bg-success" id="profSupAuditBadge">Fair Trade Certified</span>
+                                    <span class="small text-muted" id="profSupCertId">Cert #FT-88902</span>
+                                </div>
+                                <p class="small text-muted mb-0" id="profSupAuditDesc">Meets UN SDG 8.8 decent work criteria, living wage verification, and zero child labor standards.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-uppercase small text-muted border-bottom pb-2 mb-3">Enterprise Information &amp; Contacts</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Operating Region / Country:</span>
+                            <strong id="profSupCountry">Portugal</strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Lead Compliance Officer:</span>
+                            <strong id="profSupContact">Maria Santos</strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Official Email:</span>
+                            <span id="profSupEmail">contact@supplier.org</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Renewable Energy Utilization:</span>
+                            <strong class="text-success" id="profSupEnergy">100% Solar &amp; Wind</strong>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-bold text-uppercase small text-muted border-bottom pb-2 mb-2">Associated Supply Chain Roles</h6>
+                    <div id="profSupSuppliedStages" class="small text-muted">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-sm btn-dark px-3" data-bs-dismiss="modal">Close Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Direct Stage Status Update -->
+    <div class="modal fade" id="modalUpdateStageStatus" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content portal-card border-0">
+                <div class="modal-header border-bottom">
+                    <h6 class="modal-title fw-bold">Update Milestone Status</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editStageIdx">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Milestone Name</label>
+                        <input type="text" class="form-control form-control-sm bg-light" id="editStageName" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Stage Lifecycle Status</label>
+                        <select class="form-select form-select-sm" id="editStageState">
+                            <option value="done">Completed</option>
+                            <option value="current">In Progress (Current Active)</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Completion / Target Date</label>
+                        <input type="text" class="form-control form-control-sm" id="editStageDate" placeholder="e.g., Sep 22, 2026">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Milestone Audit Notes</label>
+                        <textarea class="form-control form-control-sm" id="editStageNotes" rows="2" placeholder="Quality checks, living wage validation, or transit sign-off..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-top">
+                    <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-sm btn-primary" onclick="confirmStageStatusUpdate()">Update Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JavaScript Bundle CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const DEFAULT_SUPPLIERS = [
+            { 
+                id: "SUP-1", 
+                name: "GreenTex Mills", 
+                country: "India", 
+                score: 92, 
+                audit: "Fair Trade Certified",
+                contact: "Aarav Sharma",
+                email: "aarav@greentexmills.in",
+                certId: "FT-IND-8840",
+                energy: "85% Solar Powered",
+                specialty: "Certified organic cotton spinning & recycled yarn"
+            },
+            { 
+                id: "SUP-2", 
+                name: "Apex Assembly Hub", 
+                country: "Portugal", 
+                score: 88, 
+                audit: "ISO 14001 Audited",
+                contact: "Maria Santos",
+                email: "maria.s@apexassembly.pt",
+                certId: "ISO-14001-EU912",
+                energy: "100% Renewable Hydroelectric",
+                specialty: "Low-impact automated sewing & CNC assembly"
+            },
+            { 
+                id: "SUP-3", 
+                name: "Nordic Safe Audit", 
+                country: "Sweden", 
+                score: 96, 
+                audit: "Fair Trade Certified",
+                contact: "Elin Lindqvist",
+                email: "elin@nordicsafeaudit.se",
+                certId: "SA8000-SE-4401",
+                energy: "100% Wind Power",
+                specialty: "UN SDG 8 fair labor auditing & material safety testing"
+            },
+            { 
+                id: "SUP-4", 
+                name: "BioPack Boxes", 
+                country: "Germany", 
+                score: 85, 
+                audit: "Fair Trade Certified",
+                contact: "Hans Weber",
+                email: "h.weber@biopack-packaging.de",
+                certId: "FSC-DE-2099",
+                energy: "70% Biomass & Solar",
+                specialty: "FSC-certified 100% post-consumer corrugated cardboard"
+            },
+            { 
+                id: "SUP-5", 
+                name: "Bamboo Craft Collective", 
+                country: "Vietnam", 
+                score: 90, 
+                audit: "Fair Trade Certified",
+                contact: "Nguyen Thi Lan",
+                email: "lan.nguyen@bamboocraft.vn",
+                certId: "FT-VN-1192",
+                energy: "Manual & Solar Thermal",
+                specialty: "Regenerative bamboo harvesting & natural beeswax seal"
+            }
+        ];
+
+        const SEED_PRODUCTS = [
+            {
+                id: "PROD-101",
+                name: "Organic Canvas Backpack",
+                batch: "BATCH-4021",
+                currentStageIndex: 1, // 0 to 3
+                stages: [
+                    {
+                        name: "1. Raw Materials Sourcing",
+                        desc: "Harvesting certified organic cotton and recycled zippers",
+                        supplierId: "SUP-1",
+                        completedDate: "Sep 12, 2026",
+                        notes: "Zero pesticide organic cotton verified by third party.",
+                        transitToNext: { mode: "Electric Cargo Train", carrier: "RailGreen Europe", emissions: "Low" }
+                    },
+                    {
+                        name: "2. Assembly & Stitching",
+                        desc: "Precision sewing in a 100% solar-powered workshop",
+                        supplierId: "SUP-2",
+                        completedDate: null,
+                        notes: "Target living wages distributed to all line workers.",
+                        transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" }
+                    },
+                    {
+                        name: "3. Quality & Ethical Inspection",
+                        desc: "Verifying fair living wages, seam strength, and safety checks",
+                        supplierId: "SUP-3",
+                        completedDate: null,
+                        notes: "Annual safety audit conducted under SDG 8.8 standards.",
+                        transitToNext: { mode: "Bio-Fuel Maritime Ship", carrier: "EcoLine Sea", emissions: "Moderate" }
+                    },
+                    {
+                        name: "4. Packaging & Delivered",
+                        desc: "100% compostable cardboard packaging delivered to customer",
+                        supplierId: "SUP-4",
+                        completedDate: null,
+                        notes: "Shipped with zero single-use plastic wrap.",
+                        transitToNext: null
+                    }
+                ]
+            },
+            {
+                id: "PROD-102",
+                name: "Bamboo Desk Organizer",
+                batch: "BATCH-8090",
+                currentStageIndex: 2,
+                stages: [
+                    {
+                        name: "1. Raw Materials Sourcing",
+                        desc: "Harvesting sustainable regrowth bamboo canes",
+                        supplierId: "SUP-5",
+                        completedDate: "Sep 08, 2026",
+                        notes: "Certified non-deforestation farm harvest.",
+                        transitToNext: { mode: "Electric Cargo Train", carrier: "Asia Rail Express", emissions: "Low" }
+                    },
+                    {
+                        name: "2. Assembly & Carving",
+                        desc: "CNC precision carving with non-toxic natural oil finish",
+                        supplierId: "SUP-2",
+                        completedDate: "Sep 15, 2026",
+                        notes: "Zero VOC emissions in finish application.",
+                        transitToNext: { mode: "Electric Delivery Van", carrier: "CleanHaul Logistics", emissions: "Zero" }
+                    },
+                    {
+                        name: "3. Quality & Ethical Inspection",
+                        desc: "Audit for Target 8.8 safety checks and packaging prep",
+                        supplierId: "SUP-3",
+                        completedDate: null,
+                        notes: "Structural rigidity passed international standards.",
+                        transitToNext: { mode: "Electric Delivery Van", carrier: "Local Clean Fleet", emissions: "Zero" }
+                    },
+                    {
+                        name: "4. Packaging & Delivered",
+                        desc: "Arrived at eco-friendly retail distribution center",
+                        supplierId: "SUP-4",
+                        completedDate: null,
+                        notes: "Ready for direct eco-commerce dispatch.",
+                        transitToNext: null
+                    }
+                ]
+            }
+        ];
+
+        let appState = {
+            suppliers: [],
+            products: [],
+            selectedProductId: null,
+            activePage: "home"
+        };
+
+        let modalAssignSupplier = null;
+        let modalCreateSupplier = null;
+        let modalChangeTransit = null;
+        let modalCreateProduct = null;
+        let modalSupplierProfile = null;
+        let modalUpdateStageStatus = null;
+        let activeTargetStageIndex = null;
+
+        function loadAppData() {
+            const saved = localStorage.getItem("ecoTrackPortalData_v2");
+            if (saved) {
+                try {
+                    appState = JSON.parse(saved);
+                } catch(e) {
+                    appState = { suppliers: DEFAULT_SUPPLIERS, products: SEED_PRODUCTS, selectedProductId: SEED_PRODUCTS[0].id, activePage: "home" };
+                }
+            } else {
+                appState = { suppliers: DEFAULT_SUPPLIERS, products: SEED_PRODUCTS, selectedProductId: SEED_PRODUCTS[0].id, activePage: "home" };
+                saveAppData();
+            }
+
+            if (!appState.selectedProductId && appState.products.length > 0) {
+                appState.selectedProductId = appState.products[0].id;
+            }
+
+            navigateToPage(appState.activePage || "home");
+        }
+
+        function saveAppData() {
+            localStorage.setItem("ecoTrackPortalData_v2", JSON.stringify(appState));
+        }
+
+        function navigateToPage(pageName) {
+            appState.activePage = pageName;
+            saveAppData();
+
+            // Hide all pages
+            document.getElementById("pageHome").classList.add("d-none");
+            document.getElementById("pageProducts").classList.add("d-none");
+            document.getElementById("pageSuppliers").classList.add("d-none");
+
+            // Update navbar buttons
+            document.getElementById("tabBtnHome").classList.remove("active");
+            document.getElementById("tabBtnProducts").classList.remove("active");
+            document.getElementById("tabBtnSuppliers").classList.remove("active");
+
+            if (pageName === "home") {
+                document.getElementById("pageHome").classList.remove("d-none");
+                document.getElementById("tabBtnHome").classList.add("active");
+                renderHomePage();
+            } else if (pageName === "products") {
+                document.getElementById("pageProducts").classList.remove("d-none");
+                document.getElementById("tabBtnProducts").classList.add("active");
+                renderProductsPage();
+            } else if (pageName === "suppliers") {
+                document.getElementById("pageSuppliers").classList.remove("d-none");
+                document.getElementById("tabBtnSuppliers").classList.add("active");
+                renderSuppliersPage();
+            }
+        }
+
+        function renderHomePage() {
+            document.getElementById("homeKpiProducts").textContent = appState.products.length;
+            document.getElementById("homeKpiSuppliers").textContent = appState.suppliers.length;
+
+            let totalScores = 0;
+            let totalStages = 0;
+            let deliveredCount = 0;
+
+            appState.products.forEach(p => {
+                if (p.currentStageIndex >= p.stages.length - 1) deliveredCount++;
+                p.stages.forEach(stg => {
+                    const sup = appState.suppliers.find(s => s.id === stg.supplierId);
+                    totalScores += sup ? sup.score : 75;
+                    totalStages++;
+                });
+            });
+
+            const avgScore = totalStages > 0 ? Math.round(totalScores / totalStages) : 85;
+            document.getElementById("homeKpiScore").textContent = `${avgScore}/100`;
+            document.getElementById("homeKpiDelivered").textContent = deliveredCount;
+
+            const tbody = document.getElementById("homeProductsTableBody");
+            tbody.innerHTML = "";
+
+            appState.products.forEach(p => {
+                const isDelivered = p.currentStageIndex >= p.stages.length - 1;
+                const currentStageName = p.stages[p.currentStageIndex]?.name || "Completed";
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="fw-bold">${p.name}</td>
+                        <td><code>${p.batch}</code></td>
+                        <td>${currentStageName}</td>
+                        <td><span class="badge ${isDelivered ? 'bg-success' : 'bg-primary'}">${isDelivered ? 'Delivered' : 'In Progress'}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-dark py-0" onclick="viewProductLifecycle('${p.id}')">View Journey</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderProductsPage() {
+            // Check if we are viewing detail or list
+            const listView = document.getElementById("productsListView");
+            const detailView = document.getElementById("productDetailView");
+
+            if (appState.selectedProductId && detailView.dataset.open === "true") {
+                listView.classList.add("d-none");
+                detailView.classList.remove("d-none");
+                renderDetailedLifecycle();
+            } else {
+                listView.classList.remove("d-none");
+                detailView.classList.add("d-none");
+                renderProductsGrid();
+            }
+        }
+
+        function renderProductsGrid() {
+            const grid = document.getElementById("productsCardsGrid");
+            grid.innerHTML = "";
+
+            appState.products.forEach(p => {
+                const isDelivered = p.currentStageIndex >= p.stages.length - 1;
+                const currentStage = p.stages[p.currentStageIndex]?.name || "Delivered";
+
+                let totalScore = 0;
+                p.stages.forEach(stg => {
+                    const sup = appState.suppliers.find(s => s.id === stg.supplierId);
+                    totalScore += sup ? sup.score : 70;
+                });
+                const avgScore = Math.round(totalScore / p.stages.length);
+
+                const cardCol = document.createElement("div");
+                cardCol.className = "col-md-6 col-lg-4";
+                cardCol.innerHTML = `
+                    <div class="product-card-item portal-card p-3 h-100 d-flex flex-column justify-content-between" onclick="viewProductLifecycle('${p.id}')">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-secondary"><code>${p.batch}</code></span>
+                                <span class="badge ${isDelivered ? 'bg-success' : 'bg-primary'}">${isDelivered ? 'Delivered' : 'Stage ' + (p.currentStageIndex + 1) + '/' + p.stages.length}</span>
+                            </div>
+                            <h5 class="fw-bold mb-1">${p.name}</h5>
+                            <p class="text-muted small mb-2">Current: <strong>${currentStage}</strong></p>
+                        </div>
+                        <div class="pt-2 border-top d-flex justify-content-between align-items-center">
+                            <span class="small text-muted">Eco Rating: <strong class="text-success">${avgScore}/100</strong></span>
+                            <button class="btn btn-sm btn-dark py-1 px-3">Inspect Lifecycle &rarr;</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(cardCol);
+            });
+        }
+
+        function viewProductLifecycle(productId) {
+            appState.selectedProductId = productId;
+            const detailView = document.getElementById("productDetailView");
+            detailView.dataset.open = "true";
+            navigateToPage("products");
+        }
+
+        function returnToProductsList() {
+            const detailView = document.getElementById("productDetailView");
+            detailView.dataset.open = "false";
+            renderProductsPage();
+        }
+
+        function renderDetailedLifecycle() {
+            const prod = appState.products.find(p => p.id === appState.selectedProductId);
+            if (!prod) return;
+
+            document.getElementById("detailProdName").textContent = prod.name;
+            document.getElementById("detailProdBatch").textContent = prod.batch;
+
+            let totalScore = 0;
+            prod.stages.forEach(stg => {
+                const sup = appState.suppliers.find(s => s.id === stg.supplierId);
+                totalScore += sup ? sup.score : 70;
+            });
+            const avgScore = Math.round(totalScore / prod.stages.length);
+            document.getElementById("detailProdEcoScore").textContent = `Eco Score: ${avgScore}/100`;
+
+            const isCompleted = prod.currentStageIndex >= prod.stages.length - 1;
+            const btnAdvance = document.getElementById("btnAdvanceMilestone");
+            btnAdvance.disabled = isCompleted;
+            btnAdvance.textContent = isCompleted ? "Lifecycle Fully Delivered ✓" : "Advance Next Milestone →";
+
+            const container = document.getElementById("detailMilestonesContainer");
+            container.innerHTML = "";
+
+            prod.stages.forEach((stage, idx) => {
+                const isDone = idx < prod.currentStageIndex;
+                const isCurrent = idx === prod.currentStageIndex;
+                const isPending = idx > prod.currentStageIndex;
+                const supplier = appState.suppliers.find(s => s.id === stage.supplierId);
+
+                // Build Status Bar Near Milestone
+                let statusBarHTML = "";
+                if (isDone) {
+                    const dateText = stage.completedDate ? ` on ${stage.completedDate}` : "";
+                    statusBarHTML = `<span class="milestone-status-bar status-done">✓ Completed${dateText}</span>`;
+                } else if (isCurrent) {
+                    statusBarHTML = `<span class="milestone-status-bar status-current">● Active In-Progress (Current)</span>`;
+                } else {
+                    statusBarHTML = `<span class="milestone-status-bar status-pending">○ Pending Milestone</span>`;
+                }
+
+                // Stage Container Box with View Supplier & Update Status Actions
+                const boxDiv = document.createElement("div");
+                boxDiv.className = `milestone-box ${isDone ? 'done' : (isCurrent ? 'current' : 'pending')}`;
+                boxDiv.innerHTML = `
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                        <div class="d-flex align-items-center gap-3">
+                            <h5 class="fw-bold mb-0">${stage.name}</h5>
+                            ${statusBarHTML}
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <button class="btn btn-sm btn-outline-primary" onclick="openUpdateStageStatusModal(${idx})">
+                                ✎ Update Status
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="openAssignSupplierModal(${idx})">
+                                ${supplier ? 'Change Supplier' : '+ Assign Supplier'}
+                            </button>
+                        </div>
+                    </div>
+
+                    <p class="text-muted mb-3">${stage.desc}</p>
+
+                    <!-- Supplier Details Card inside Stage with Well-Defined View Supplier Profile Button -->
+                    <div class="p-3 rounded border bg-light d-flex flex-wrap justify-content-between align-items-center gap-3">
+                        <div class="d-flex flex-column">
+                            <span class="text-muted small d-block">Stage Supplier:</span>
+                            <span class="fs-6"><strong>${supplier ? supplier.name : 'None Assigned'}</strong> <span class="text-muted small">(${supplier ? supplier.country : '--'})</span></span>
+                            ${stage.notes ? `<small class="text-secondary mt-1"><i class="text-muted">Note:</i> ${stage.notes}</small>` : ''}
+                        </div>
+                        <div>
+                            <span class="text-muted small d-block">SDG 8 Labor Audit:</span>
+                            <span class="badge ${supplier && supplier.audit.includes('Certified') ? 'bg-success' : 'bg-warning text-dark'}">
+                                ${supplier ? supplier.audit : 'Unverified'}
+                            </span>
+                        </div>
+                        <div>
+                            <span class="text-muted small d-block">Sustainability Score:</span>
+                            <span class="fw-bold ${supplier && supplier.score >= 85 ? 'text-success' : 'text-danger'}">
+                                ${supplier ? supplier.score : 0} / 100
+                            </span>
+                        </div>
+                        <div>
+                            ${supplier ? `
+                                <button class="btn btn-sm btn-dark px-3 shadow-sm" onclick="viewSupplierProfile('${supplier.id}')">
+                                    View Supplier Profile &rarr;
+                                </button>
+                            ` : `
+                                <button class="btn btn-sm btn-outline-secondary" onclick="openAssignSupplierModal(${idx})">
+                                    + Assign Supplier
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(boxDiv);
+
+                // Directional Arrow and Transportation between stages
+                if (stage.transitToNext) {
+                    const transit = stage.transitToNext;
+                    const arrowDiv = document.createElement("div");
+                    arrowDiv.className = "stage-arrow-divider";
+                    arrowDiv.innerHTML = `
+                        <div class="arrow-line"></div>
+                        <div class="arrow-icon-badge" onclick="openChangeTransitModal(${idx})" title="Click to change transport provider">
+                            <span>🚛 <strong>${transit.mode}</strong> &bull; Carrier: ${transit.carrier}</span>
+                            <span class="badge ${transit.emissions === 'Zero' || transit.emissions === 'Low' ? 'bg-success' : 'bg-secondary'}">${transit.emissions} CO2</span>
+                            <span class="text-primary small text-decoration-underline ms-1">Edit Transit</span>
+                        </div>
+                        <div class="arrow-line"></div>
+                        <div class="arrow-head"></div>
+                    `;
+                    container.appendChild(arrowDiv);
+                }
+            });
+        }
+
+        function viewSupplierProfile(supplierId) {
+            const sup = appState.suppliers.find(s => s.id === supplierId);
+            if (!sup) {
+                showToast("Supplier details could not be found.", "warning");
+                return;
+            }
+
+            document.getElementById("profSupName").textContent = sup.name;
+            document.getElementById("profSupId").textContent = sup.id;
+            document.getElementById("profSupScore").textContent = sup.score;
+            document.getElementById("profSupCountry").textContent = sup.country || "Global";
+            document.getElementById("profSupContact").textContent = sup.contact || "Compliance Director";
+            document.getElementById("profSupEmail").textContent = sup.email || `contact@${sup.name.toLowerCase().replace(/[^a-z0-9]/g, '')}.com`;
+            document.getElementById("profSupEnergy").textContent = sup.energy || "80% Renewable Clean Power";
+            document.getElementById("profSupCertId").textContent = sup.certId ? `Cert #${sup.certId}` : "Cert #SDG-8801";
+            document.getElementById("profSupAuditBadge").textContent = sup.audit || "Unverified";
+            document.getElementById("profSupAuditBadge").className = `badge ${sup.audit && sup.audit.includes('Certified') ? 'bg-success' : 'bg-warning text-dark'}`;
+
+            // Find which products and stages this supplier participates in
+            const stagesSupplied = [];
+            appState.products.forEach(p => {
+                p.stages.forEach(stg => {
+                    if (stg.supplierId === sup.id) {
+                        stagesSupplied.push(`<li><strong>${p.name}</strong> (<code>${p.batch}</code>) &mdash; ${stg.name}</li>`);
+                    }
+                });
+            });
+
+            document.getElementById("profSupSuppliedStages").innerHTML = stagesSupplied.length > 0 
+                ? `<ul class="mb-0 ps-3">${stagesSupplied.join("")}</ul>` 
+                : "<em>Currently not attached to any active product pipeline milestones.</em>";
+
+            modalSupplierProfile.show();
+        }
+
+        function openUpdateStageStatusModal(stageIdx) {
+            activeTargetStageIndex = stageIdx;
+            const prod = appState.products.find(p => p.id === appState.selectedProductId);
+            if (!prod) return;
+
+            const stage = prod.stages[stageIdx];
+            document.getElementById("editStageIdx").value = stageIdx;
+            document.getElementById("editStageName").value = stage.name;
+
+            let currentState = "pending";
+            if (stageIdx < prod.currentStageIndex) currentState = "done";
+            else if (stageIdx === prod.currentStageIndex) currentState = "current";
+            document.getElementById("editStageState").value = currentState;
+
+            const today = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+            document.getElementById("editStageDate").value = stage.completedDate || today;
+            document.getElementById("editStageNotes").value = stage.notes || "";
+
+            modalUpdateStageStatus.show();
+        }
+
+        function confirmStageStatusUpdate() {
+            const prod = appState.products.find(p => p.id === appState.selectedProductId);
+            if (!prod || activeTargetStageIndex === null) return;
+
+            const stateVal = document.getElementById("editStageState").value;
+            const dateVal = document.getElementById("editStageDate").value.trim();
+            const notesVal = document.getElementById("editStageNotes").value.trim();
+            const stage = prod.stages[activeTargetStageIndex];
+
+            stage.notes = notesVal;
+
+            if (stateVal === "done") {
+                stage.completedDate = dateVal || new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+                // If this is set to done, ensure currentStageIndex is at least next
+                if (prod.currentStageIndex <= activeTargetStageIndex) {
+                    prod.currentStageIndex = Math.min(prod.stages.length - 1, activeTargetStageIndex + 1);
+                }
+            } else if (stateVal === "current") {
+                prod.currentStageIndex = activeTargetStageIndex;
+                stage.completedDate = null;
+            } else if (stateVal === "pending") {
+                if (prod.currentStageIndex >= activeTargetStageIndex) {
+                    prod.currentStageIndex = Math.max(0, activeTargetStageIndex - 1);
+                }
+                stage.completedDate = null;
+            }
+
+            saveAppData();
+            modalUpdateStageStatus.hide();
+            renderDetailedLifecycle();
+            showToast(`Status updated for <strong>${stage.name}</strong>.`, "success");
+        }
+
+        function advanceActiveMilestone() {
+            const prod = appState.products.find(p => p.id === appState.selectedProductId);
+            if (!prod || prod.currentStageIndex >= prod.stages.length - 1) return;
+
+            const currentStage = prod.stages[prod.currentStageIndex];
+            const supplier = appState.suppliers.find(s => s.id === currentStage.supplierId);
+
+            // Gatekeeper check: Supplier audit
+            if (supplier && supplier.audit === "Unverified / High Risk") {
+                showToast(`Cannot advance: Supplier <strong>${supplier.name}</strong> failed ethical labor audit (SDG 8)! Please re-assign supplier.`, "danger");
+                return;
+            }
+
+            // Stamp completion date on the stage just finished
+            const today = new Date();
+            const dateStr = today.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+            currentStage.completedDate = dateStr;
+
+            prod.currentStageIndex++;
+            saveAppData();
+            renderDetailedLifecycle();
+            showToast(`Milestone <strong>${prod.stages[prod.currentStageIndex].name}</strong> is now Active!`, "success");
+        }
+
+        function renderSuppliersPage() {
+            const container = document.getElementById("suppliersByProductContainer");
+            container.innerHTML = "";
+
+            appState.products.forEach(prod => {
+                const section = document.createElement("div");
+                section.className = "portal-card p-4";
+
+                // Collect unique suppliers for this product
+                const stageSuppliersList = [];
+                prod.stages.forEach((stg, sIdx) => {
+                    const sup = appState.suppliers.find(s => s.id === stg.supplierId);
+                    stageSuppliersList.push({
+                        stageIndex: sIdx + 1,
+                        stageName: stg.name,
+                        supplier: sup
+                    });
+                });
+
+                let tableRows = stageSuppliersList.map(item => {
+                    const sup = item.supplier;
+                    if (!sup) {
+                        return `
+                            <tr>
+                                <td><span class="badge bg-light text-dark border">Stage ${item.stageIndex}</span></td>
+                                <td class="fw-semibold">${item.stageName}</td>
+                                <td colspan="5" class="text-muted">No supplier assigned</td>
+                            </tr>
+                        `;
+                    }
+                    const badgeClass = sup.audit.includes("Certified") ? "bg-success" : (sup.audit.includes("Audited") ? "bg-info text-dark" : "bg-danger");
+                    return `
+                        <tr>
+                            <td><span class="badge bg-light text-dark border">Stage ${item.stageIndex}</span></td>
+                            <td class="fw-semibold">${item.stageName}</td>
+                            <td class="fw-bold">${sup.name}</td>
+                            <td>${sup.country}</td>
+                            <td><span class="badge ${badgeClass}">${sup.audit}</span></td>
+                            <td><strong>${sup.score}</strong> / 100</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-dark py-0 px-2" onclick="viewSupplierProfile('${sup.id}')">
+                                    Profile &rarr;
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join("");
+
+                section.innerHTML = `
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                        <div>
+                            <h5 class="fw-bold mb-0 text-dark">${prod.name}</h5>
+                            <span class="text-muted small">Batch: <code>${prod.batch}</code> &bull; Lifecycle Stages: ${prod.stages.length}</span>
+                        </div>
+                        <button class="btn btn-sm btn-outline-dark" onclick="viewProductLifecycle('${prod.id}')">View Full Lifecycle &rarr;</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Lifecycle Node</th>
+                                    <th>Stage Name</th>
+                                    <th>Assigned Supplier</th>
+                                    <th>Country</th>
+                                    <th>SDG 8 Labor Audit</th>
+                                    <th>Eco Score</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${tableRows}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                container.appendChild(section);
+            });
+        }
+
+        function openAssignSupplierModal(stageIndex) {
+            activeTargetStageIndex = stageIndex;
+            const prod = appState.products.find(p => p.id === appState.selectedProductId);
+            if (!prod) return;
+
+            document.getElementById("assignStageName").textContent = prod.stages[stageIndex].name;
+            const dropdown = document.getElementById("dropdownExistingSuppliers");
+            dropdown.innerHTML = `<option value="">-- Select Existing Supplier --</option>`;
+
+            appState.suppliers.forEach(s => {
+                dropdown.innerHTML += `<option value="${s.id}">${s.name} (${s.country}) - Score: ${s.score}/100 [${s.audit}]</option>`;
+            });
+
+            dropdown.value = prod.stages[stageIndex].supplierId || "";
+            document.getElementById("newSupName").value = "";
+            document.getElementById("newSupCountry").value = "";
+            document.getElementById("newSupScore").value = "";
+
+            modalAssignSupplier.show();
+        }
+
+        function confirmSupplierAssignment() {
+            const prod = appState.products.find(p => p.id === appState.selectedProductId);
+            if (!prod || activeTargetStageIndex === null) return;
+
+            const existingSupId = document.getElementById("dropdownExistingSuppliers").value;
+            const newName = document.getElementById("newSupName").value.trim();
+
+            if (newName) {
+                const newId = `SUP-${Date.now().toString().slice(-4)}`;
+                const newCountry = document.getElementById("newSupCountry").value.trim() || "International";
+                const newScore = parseInt(document.getElementById("newSupScore").value) || 85;
+                const newAudit = document.getElementById("newSupAudit").value;
+
+                const newSup = { id: newId, name: newName, country: newCountry, score: newScore, audit: newAudit };
+                appState.suppliers.push(newSup);
+                prod.stages[activeTargetStageIndex].supplierId = newId;
+            } else if (existingSupId) {
+                prod.stages[activeTargetStageIndex].supplierId = existingSupId;
+            }
+
+            saveAppData();
+            modalAssignSupplier.hide();
+            renderDetailedLifecycle();
+            showToast("Supplier assignment updated for this stage.", "success");
+        }
+
+        function openCreateSupplierModal() {
+            document.getElementById("globalSupName").value = "";
+            document.getElementById("globalSupCountry").value = "";
+            document.getElementById("globalSupScore").value = "85";
+            modalCreateSupplier.show();
+        }
+
+        function saveGlobalSupplier() {
+            const name = document.getElementById("globalSupName").value.trim();
+            const country = document.getElementById("globalSupCountry").value.trim() || "Global";
+            const score = parseInt(document.getElementById("globalSupScore").value) || 80;
+            const audit = document.getElementById("globalSupAudit").value;
+
+            if (!name) {
+                showToast("Please enter a supplier name.", "warning");
+                return;
+            }
+
+            const newId = `SUP-${Date.now().toString().slice(-4)}`;
+            appState.suppliers.push({ id: newId, name, country, score, audit });
+            saveAppData();
+            modalCreateSupplier.hide();
+            renderSuppliersPage();
+            showToast(`Supplier <strong>${name}</strong> added to global registry.`, "success");
+        }
+
+        function openChangeTransitModal(stageIndex) {
+            activeTargetStageIndex = stageIndex;
+            const prod = appState.products.find(p => p.id === appState.selectedProductId);
+            if (!prod || !prod.stages[stageIndex].transitToNext) return;
+
+            const transit = prod.stages[stageIndex].transitToNext;
+            document.getElementById("transitModeSelect").value = transit.mode;
+            document.getElementById("transitCarrierName").value = transit.carrier;
+
+            modalChangeTransit.show();
+        }
+
+        function saveTransitChange() {
+            const prod = appState.products.find(p => p.id === appState.selectedProductId);
+            if (!prod || activeTargetStageIndex === null) return;
+
+            const mode = document.getElementById("transitModeSelect").value;
+            const carrier = document.getElementById("transitCarrierName").value.trim() || "Green Logistics Lines";
+            let emissions = "Moderate";
+            if (mode.includes("Train") || mode.includes("Van")) emissions = "Low";
+            if (mode.includes("Zero") || mode.includes("Electric Delivery")) emissions = "Zero";
+            if (mode.includes("Diesel")) emissions = "High";
+
+            prod.stages[activeTargetStageIndex].transitToNext = { mode, carrier, emissions };
+            saveAppData();
+            modalChangeTransit.hide();
+            renderDetailedLifecycle();
+            showToast("Logistics provider updated.", "info");
+        }
+
+        function openNewProductModal() {
+            document.getElementById("createProdName").value = "";
+            document.getElementById("createProdBatch").value = `BATCH-${Math.floor(1000 + Math.random() * 9000)}`;
+            modalCreateProduct.show();
+        }
+
+        function saveNewProduct() {
+            const name = document.getElementById("createProdName").value.trim();
+            const batch = document.getElementById("createProdBatch").value.trim();
+            if (!name) {
+                showToast("Please enter a product name.", "warning");
+                return;
+            }
+
+            const newProduct = {
+                id: `PROD-${Date.now().toString().slice(-4)}`,
+                name: name,
+                batch: batch,
+                currentStageIndex: 0,
+                stages: [
+                    { name: "1. Raw Materials Sourcing", desc: "Sourcing certified baseline materials", supplierId: "SUP-1", completedDate: null, transitToNext: { mode: "Electric Cargo Train", carrier: "RailGreen Europe", emissions: "Low" } },
+                    { name: "2. Assembly & Manufacturing", desc: "Ethical manufacturing with clean power", supplierId: "SUP-2", completedDate: null, transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" } },
+                    { name: "3. Quality & Ethical Inspection", desc: "SDG 8 fair wages and material audit", supplierId: "SUP-3", completedDate: null, transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" } },
+                    { name: "4. Packaging & Delivered", desc: "Recycled box packaging delivered to end point", supplierId: "SUP-4", completedDate: null, transitToNext: null }
+                ]
+            };
+
+            appState.products.push(newProduct);
+            appState.selectedProductId = newProduct.id;
+            saveAppData();
+            modalCreateProduct.hide();
+            viewProductLifecycle(newProduct.id);
+            showToast(`Product <strong>${name}</strong> added!`, "success");
+        }
+
+        function showToast(msg, type = "success") {
+            const div = document.getElementById("statusNotification");
+            div.innerHTML = `
+                <div class="alert alert-${type} alert-dismissible fade show py-2 small mb-3 shadow-sm" role="alert">
+                    ${msg}
+                    <button type="button" class="btn-close py-2" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            setTimeout(() => { div.innerHTML = ""; }, 4000);
+        }
+
+        function restoreDemoData() {
+            localStorage.removeItem("ecoTrackPortalData_v2");
+            loadAppData();
+            showToast("Factory demo data reloaded.", "info");
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            modalAssignSupplier = new bootstrap.Modal(document.getElementById("modalAssignSupplier"));
+            modalCreateSupplier = new bootstrap.Modal(document.getElementById("modalCreateSupplier"));
+            modalChangeTransit = new bootstrap.Modal(document.getElementById("modalChangeTransit"));
+            modalCreateProduct = new bootstrap.Modal(document.getElementById("modalCreateProduct"));
+            modalSupplierProfile = new bootstrap.Modal(document.getElementById("modalSupplierProfile"));
+            modalUpdateStageStatus = new bootstrap.Modal(document.getElementById("modalUpdateStageStatus"));
+
+            loadAppData();
+        });
+    </script>
+</body>
+</html>
