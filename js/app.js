@@ -38,7 +38,7 @@ const DEFAULT_SUPPLIERS = [
         email: "rohan.d@apexassembly.in",
         certId: "ISO-14001-IN912",
         energy: "100% Renewable Hydroelectric",
-        specialty: "Low-impact automated sewing & CNC assembly"
+        specialty: "Recycled steel sourcing, CNC forming & precision metal manufacturing"
     },
     {
         id: "SUP-3",
@@ -87,6 +87,54 @@ const DEFAULT_SUPPLIERS = [
         certId: "FT-IN-1192",
         energy: "Manual & Solar Thermal",
         specialty: "Regenerative bamboo harvesting & natural beeswax seal"
+    },
+    {
+        id: "SUP-6",
+        name: "StitchWorks Textile Assembly",
+        city: "Tiruppur",
+        state: "Tamil Nadu",
+        country: "India",
+        material: "Garment Stitching & Assembly",
+        score: 85,
+        checklist: makeChecklist(17),
+        audit: "Fair Trade Certified",
+        contact: "Karthik Raja",
+        email: "karthik.r@stitchworks.in",
+        certId: "FT-IN-5521",
+        energy: "60% Solar Powered",
+        specialty: "Precision garment stitching and assembly for apparel & soft goods"
+    },
+    {
+        id: "SUP-7",
+        name: "Bamboo Works CNC Studio",
+        city: "Sivasagar",
+        state: "Assam",
+        country: "India",
+        material: "Bamboo Shaping & Carving",
+        score: 90,
+        checklist: makeChecklist(18),
+        audit: "ISO 14001 Audited",
+        contact: "Debojit Gogoi",
+        email: "debojit.g@bambooworks.in",
+        certId: "ISO-14001-IN770",
+        energy: "75% Biomass Powered",
+        specialty: "CNC bamboo shaping, carving and precision cutting for consumer goods"
+    },
+    {
+        id: "SUP-8",
+        name: "Denim Revive Recyclers",
+        city: "Ahmedabad",
+        state: "Gujarat",
+        country: "India",
+        material: "Recycled Denim Fabric",
+        score: 85,
+        checklist: makeChecklist(17),
+        audit: "Fair Trade Certified",
+        contact: "Meera Solanki",
+        email: "meera.s@denimrevive.in",
+        certId: "FT-IN-3390",
+        energy: "50% Solar Powered",
+        specialty: "Post-consumer denim shredding and recycled fabric re-spinning"
     }
 ];
 
@@ -147,7 +195,7 @@ const SEED_PRODUCTS = [
             {
                 name: "2. Assembly & Stitching",
                 desc: "Precision sewing in a 100% solar-powered workshop",
-                supplierId: "SUP-2",
+                supplierId: "SUP-6",
                 completedDate: null,
                 notes: "Target living wages distributed to all line workers.",
                 transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" }
@@ -187,7 +235,7 @@ const SEED_PRODUCTS = [
             {
                 name: "2. Assembly & Carving",
                 desc: "CNC precision carving with non-toxic natural oil finish",
-                supplierId: "SUP-2",
+                supplierId: "SUP-7",
                 completedDate: "Sep 15, 2026",
                 notes: "Zero VOC emissions in finish application.",
                 transitToNext: { mode: "Electric Delivery Van", carrier: "CleanHaul Logistics", emissions: "Zero" }
@@ -219,7 +267,7 @@ const SEED_PRODUCTS = [
             {
                 name: "1. Raw Materials Sourcing",
                 desc: "Collecting post-consumer denim scraps for shredding and re-spinning",
-                supplierId: "SUP-1",
+                supplierId: "SUP-8",
                 completedDate: null,
                 notes: "Awaiting first batch of reclaimed denim.",
                 transitToNext: { mode: "Electric Cargo Train", carrier: "RailGreen India", emissions: "Low" }
@@ -227,7 +275,7 @@ const SEED_PRODUCTS = [
             {
                 name: "2. Assembly & Stitching",
                 desc: "Reinforced stitching using solar-powered machines",
-                supplierId: "SUP-2",
+                supplierId: "SUP-6",
                 completedDate: null,
                 notes: "",
                 transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" }
@@ -307,7 +355,7 @@ const SEED_PRODUCTS = [
             {
                 name: "2. Cutting & Shaping",
                 desc: "CNC shaping into fork, spoon and knife sets",
-                supplierId: "SUP-2",
+                supplierId: "SUP-7",
                 completedDate: null,
                 notes: "",
                 transitToNext: { mode: "Electric Delivery Van", carrier: "CleanHaul Logistics", emissions: "Zero" }
@@ -355,7 +403,7 @@ const SEED_PRODUCTS = [
             {
                 name: "2. Assembly & Stitching",
                 desc: "Low-impact dyeing and stitching",
-                supplierId: "SUP-2",
+                supplierId: "SUP-6",
                 completedDate: "Sep 11, 2026",
                 notes: "Azo-free dyes used throughout.",
                 transitToNext: { mode: "Electric Delivery Van", carrier: "CityZero Dispatch", emissions: "Zero" }
@@ -399,7 +447,7 @@ let pendingEditRedirect = false;
 let newProductStages = [];
 
 function loadAppData() {
-    const saved = localStorage.getItem("ecoTrackPortalData_v3");
+    const saved = localStorage.getItem("ecoTrackPortalData_v4");
     if (saved) {
         try {
             appState = JSON.parse(saved);
@@ -419,7 +467,7 @@ function loadAppData() {
 }
 
 function saveAppData() {
-    localStorage.setItem("ecoTrackPortalData_v3", JSON.stringify(appState));
+    localStorage.setItem("ecoTrackPortalData_v4", JSON.stringify(appState));
 }
 
 function navigateToPage(pageName) {
