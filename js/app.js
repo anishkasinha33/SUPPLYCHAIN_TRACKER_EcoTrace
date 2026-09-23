@@ -544,25 +544,38 @@ function renderHomePage() {
     document.getElementById("homeKpiScore").textContent = `${avgScore}/100`;
     document.getElementById("homeKpiDelivered").textContent = deliveredCount;
 
-    const tbody = document.getElementById("homeProductsTableBody");
-    tbody.innerHTML = "";
+    const listBody = document.getElementById("homeProductsListBody");
+    listBody.innerHTML = "";
 
     appState.products.forEach(p => {
         const isDelivered = p.currentStageIndex >= p.stages.length - 1;
         const currentStageName = p.stages[p.currentStageIndex]?.name || "Completed";
+        const trailHTML = buildStageTrailHTML(p);
 
-        tbody.innerHTML += `
-            <tr>
-                <td class="fw-bold">${p.name}</td>
-                <td><code>${p.batch}</code></td>
-                <td>${currentStageName}</td>
-                <td><span class="badge ${isDelivered ? 'bg-success' : 'bg-primary'}">${isDelivered ? 'Delivered' : 'In Progress'}</span></td>
-                <td>
-                    <button class="btn btn-sm btn-outline-dark py-0" onclick="viewProductLifecycle('${p.id}')">View Journey</button>
-                </td>
-            </tr>
+        listBody.innerHTML += `
+            <div class="ledger-row" onclick="viewProductLifecycle('${p.id}')">
+                <div>
+                    <span class="ledger-row-name">${p.name}</span>
+                    <span class="ledger-row-batch">${p.batch}</span>
+                </div>
+                <div class="ledger-trail">${trailHTML}</div>
+                <span class="ledger-row-stage">${currentStageName}</span>
+                <span class="badge ${isDelivered ? 'bg-success' : 'bg-primary'}">${isDelivered ? 'Delivered' : 'In Progress'}</span>
+            </div>
         `;
     });
+}
+
+// Builds the small filled/current/pending segment trail shown per product on the Home ledger
+function buildStageTrailHTML(product) {
+    let html = "";
+    product.stages.forEach((stg, idx) => {
+        let stateClass = "pending";
+        if (idx < product.currentStageIndex) stateClass = "done";
+        else if (idx === product.currentStageIndex) stateClass = "current";
+        html += `<span class="trail-seg ${stateClass}"></span>`;
+    });
+    return html;
 }
 
 function renderProductsPage() {
