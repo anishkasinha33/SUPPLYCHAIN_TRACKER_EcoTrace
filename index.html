@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="EcoTrace helps small businesses trace materials, suppliers and transport for every product, and share the full story with customers." />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>EcoTrace | Sustainable Supply Chain Tracker</title>
+    <script>
+      // Apply the saved theme before first paint to avoid a flash.
+      try {
+        var t = localStorage.getItem('sct.theme');
+        try { t = JSON.parse(t); } catch (e) {}
+        if (t !== 'dark' && t !== 'light') t = null;
+        if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', t);
+        document.documentElement.setAttribute('data-bs-theme', t);
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
