@@ -1,34 +1,17 @@
-// BACKEND: this file is the seam. Today it merges seed data with products the user created
-// in this browser. Later, each function below becomes a fetch() to the Node.js API.
-import { certifications } from '../data/certifications.js';
-import { providers } from '../data/providers.js';
-import { suppliers } from '../data/suppliers.js';
-import { materials } from '../data/materials.js';
-import { products, productMaterials } from '../data/products.js';
-import { stages, legs } from '../data/pipeline.js';
-import { storage } from './storage.js';
+// BACKEND seam: raw rows now come from the EcoTrace API (see ./api.js and /backend) instead of local seed data.
+import { api } from './api.js';
 
-const KEY = 'sct.productPayloads';
+export const emptyRaw = () => ({
+  certifications: [], providers: [], suppliers: [], materials: [],
+  products: [], productMaterials: [], stages: [], legs: [],
+});
 
-/** Payloads the user created or edited: { [productId]: { product, materialLines, stages, legs } } */
-export const readPayloads = () => storage.get(KEY, {});
-export const writePayloads = (map) => storage.set(KEY, map);
+/** The signed-in account's products plus the catalogs, as { products, productMaterials, stages, legs, ... }. */
+export const loadRaw = () => api('/graph');
 
-export function loadRaw() {
-  const payloads = readPayloads();
-  const ids = new Set(Object.keys(payloads));
-  const keep = (row) => !ids.has(row.productId);
-  const created = Object.values(payloads);
-  return {
-    certifications,
-    providers,
-    suppliers,
-    materials,
-    products: [...products.filter((p) => !ids.has(p.id)), ...created.map((c) => c.product)],
-    productMaterials: [...productMaterials.filter(keep), ...created.flatMap((c) => c.materialLines.map((l) => ({ ...l, productId: c.product.id })))],
-    stages: [...stages.filter(keep), ...created.flatMap((c) => c.stages)],
-    legs: [...legs.filter(keep), ...created.flatMap((c) => c.legs)],
-  };
-}
+/** The sample product shown to visitors who are not signed in (landing page). */
+export const loadSampleRaw = () => api('/public/sample');
 
-export const seedProductIds = new Set(products.map((p) => p.id));
+// Sample products are now copied into every account, so every product can be deleted.
+// Kept (empty) because ProductDetailsPage imports it.
+export const seedProductIds = new Set();

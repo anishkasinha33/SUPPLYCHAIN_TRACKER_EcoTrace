@@ -1,0 +1,28 @@
+{
+  "name": "ecotrace-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "REST API and MongoDB persistence for the EcoTrace Sustainable Supply Chain Tracker",
+  "type": "module",
+  "engines": { "node": ">=20.19" },
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "seed": "node src/seed/seed.js",
+    "test": "node --test --test-concurrency=1 \"tests/**/*.test.js\""
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "mongoose": "^8.9.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.0.0"
+  }
+}

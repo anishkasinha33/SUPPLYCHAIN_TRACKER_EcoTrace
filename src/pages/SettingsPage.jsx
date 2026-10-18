@@ -22,7 +22,7 @@ export default function SettingsPage() {
   const [confirm, setConfirm] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  const saveAcct = (e) => {
+  const saveAcct = async (e) => {
     e.preventDefault();
     const er = {};
     if (acct.name.trim().length < 2) er.name = 'Enter your full name.';
@@ -30,9 +30,9 @@ export default function SettingsPage() {
     if (acct.phone.replace(/\D/g, '').length < 8) er.phone = 'Enter a phone number with at least 8 digits.';
     setErrs(er);
     if (Object.keys(er).length) return;
-    updateProfile(acct); toast('Account saved');
+    try { await updateProfile(acct); toast('Account saved'); } catch (err) { toast(err.message, 'error'); }
   };
-  const saveBiz = (e) => { e.preventDefault(); if (biz.businessName.trim().length < 2) { setErrs({ businessName: 'Enter your business name.' }); return; } setErrs({}); updateProfile(biz); toast('Business details saved'); };
+  const saveBiz = async (e) => { e.preventDefault(); if (biz.businessName.trim().length < 2) { setErrs({ businessName: 'Enter your business name.' }); return; } setErrs({}); try { await updateProfile(biz); toast('Business details saved'); } catch (err) { toast(err.message, 'error'); } };
   const reset = async () => { setBusy(true); await resetData(); setBusy(false); setConfirm(false); toast('Demo data reset'); };
 
   return (
