@@ -1,0 +1,18 @@
+// verificationStatus: 'verified' | 'pending' | 'needs-review'
+// fairLabor: 'certified' | 'self-declared' | 'not-assessed'
+// type: 'material' (supplies materials) | 'manufacturer' (makes the product)
+export const suppliers = [
+  { id: 's1', name: 'GreenWeave Textiles', type: 'material', location: 'Nandipur, Sundarpur, Paschim Pradesh', verificationStatus: 'verified', fairLabor: 'certified', rating: 4.6, since: 2022, about: 'Reclaims cotton offcuts from garment units and respins them into yarn.' },
+  { id: 's2', name: 'Bansgaon Bamboo Collective', type: 'material', location: 'Bansgaon, Sahyadri Pradesh', verificationStatus: 'verified', fairLabor: 'certified', rating: 4.4, since: 2023, about: 'A growers\' cooperative harvesting managed bamboo on community land.' },
+  { id: 's3', name: 'Ridgeway Reclaim Metals', type: 'material', location: 'Lohapur, Shilpanagar, Sahyadri Pradesh', verificationStatus: 'pending', fairLabor: 'self-declared', rating: 3.7, since: 2024, about: 'Sorts and remelts aluminium scrap into food-grade billets.' },
+  { id: 's4', name: 'Heron Natural Rubber Co-op', type: 'material', location: 'Raspur, Dakshin Pradesh', verificationStatus: 'verified', fairLabor: 'certified', rating: 4.7, since: 2021, about: 'Smallholder tappers supplying latex under a fair-price agreement.' },
+  { id: 's5', name: 'Silaipur Knit Works', type: 'manufacturer', location: 'Silaipur, Poorva Pradesh', verificationStatus: 'verified', fairLabor: 'certified', rating: 4.2, since: 2022, about: 'Cut-and-sew unit with rooftop solar and an on-site water recycling plant.' },
+  { id: 's6', name: 'Tantunagar Fibre Mills', type: 'material', location: 'Sutrapur, Tantunagar, Paschim Pradesh', verificationStatus: 'pending', fairLabor: 'self-declared', rating: 3.1, since: 2023, about: 'Produces polyester yarn from virgin and bottle-recycled feedstock.' },
+  { id: 's7', name: 'Tamrapur Metalform', type: 'manufacturer', location: 'Tamrapur, Poorva Pradesh', verificationStatus: 'verified', fairLabor: 'certified', rating: 4.0, since: 2023, about: 'Deep-draw and finishing of aluminium drinkware.' },
+  { id: 's8', name: 'Kagadnagar Pulp & Pack', type: 'material', location: 'Kagadnagar, Sahyadri Pradesh', verificationStatus: 'pending', fairLabor: 'self-declared', rating: 3.6, since: 2024, about: 'Recycled paperboard made from post-consumer packaging.' },
+  { id: 's9', name: 'Thistledown Herbal Extracts', type: 'material', location: 'Ayurgaon, Marusthal Pradesh', verificationStatus: 'verified', fairLabor: 'certified', rating: 4.3, since: 2022, about: 'Cold-pressed neem and shea blends from women-led collection groups.' },
+  { id: 's10', name: 'Riverbend Stitch Works', type: 'manufacturer', location: 'Sundarpur, Paschim Pradesh', verificationStatus: 'verified', fairLabor: 'certified', rating: 4.1, since: 2022, about: 'Small-batch bag and accessory sewing unit.' },
+  { id: 's11', name: 'Unnipur Outerwear Works', type: 'manufacturer', location: 'Unnipur, Panchnad Pradesh', verificationStatus: 'needs-review', fairLabor: 'not-assessed', rating: 2.8, since: 2025, about: 'Waterproof garment manufacturer. An audit is overdue.' },
+  { id: 's12', name: 'Karigarpada Craft Works', type: 'manufacturer', location: 'Karigarpada, Sahyadri Pradesh', verificationStatus: 'verified', fairLabor: 'self-declared', rating: 3.9, since: 2023, about: 'Assembly, finishing and packing for home, gift and personal-care goods.' },
+  { id: 's13', name: 'Samudrapur Polymer Moulders', type: 'manufacturer', location: 'Samudrapur, Dakshin Pradesh', verificationStatus: 'verified', fairLabor: 'certified', rating: 4.3, since: 2021, about: 'Compression moulding of natural rubber goods.' },
+];

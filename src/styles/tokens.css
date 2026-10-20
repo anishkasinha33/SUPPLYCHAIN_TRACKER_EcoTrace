@@ -1,0 +1,122 @@
+/* ==========================================================
+   Design tokens. Everything visual reads from these variables.
+   Light is the default; [data-theme="dark"] redefines them.
+   ========================================================== */
+:root {
+  color-scheme: light;
+
+  /* Neutrals and surfaces (limestone, not cream) */
+  --bg: #edf3f0;
+  --surface: #ffffff;
+  --surface-2: #dde9e3;
+  --surface-inverse: #082a20;
+  --ink: #0d1f19;
+  --ink-inverse: #eef5f1;
+  --muted: #566a62;
+  --rule: #d6e3dc;
+  --rule-strong: #8da59a;
+
+  /* Accents */
+  --accent: #0b3d2e;          /* moss ink: primary actions, key marks */
+  --accent-hover: #072b20;
+  --on-accent: #f2faf6;
+  --signal: #2f9e7a;          /* ochre: highlights, in-progress, route markers */
+  --signal-text: #11684c;
+  --focus: #11684c;
+
+  /* Semantic */
+  --success: #2f6b45;
+  --warning: #7f520c;
+  --danger: #a33a2a;
+  --info: #2d5b7a;
+  --verified: #1f5f5b;
+
+  /* Eco-score scale: 1 (at risk) to 5 (leading). Used as fills; text stays ink. */
+  --eco-1: #a33a2a;
+  --eco-2: #b9701f;
+  --eco-3: #a09a3a;
+  --eco-4: #4d8560;
+  --eco-5: #0b3d2e;
+
+  /* Transport modes (distinguishable by lightness as well as hue) */
+  --mode-road: #7f520c;
+  --mode-rail: #2d5b7a;
+  --mode-sea: #1f5f5b;
+  --mode-air: #a33a2a;
+
+  /* Typography */
+  --font-display: 'Sora', 'Manrope', system-ui, sans-serif;
+  --font-text: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --fs-display: clamp(2.75rem, 6.4vw, 5.25rem);
+  --fs-title: clamp(2rem, 3.6vw, 2.75rem);
+  --fs-section: 1.625rem;
+  --fs-lead: 1.1875rem;
+  --fs-body: 1rem;
+  --fs-label: 0.8125rem;
+  --fs-meta: 0.75rem;
+  --fs-metric: clamp(1.75rem, 2.4vw, 2.25rem);
+
+  /* Spacing (4px base) */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4.5rem;
+  --sp-9: 7rem;
+
+  /* Radius: small and consistent; larger only for the public passport */
+  --r-1: 8px;
+  --r-2: 12px;
+  --r-3: 22px;
+  --r-pill: 999px;
+
+  --shadow-pop: 0 14px 36px rgba(15, 42, 30, 0.2);
+  --shadow-card: 0 1px 2px rgba(15, 42, 30, 0.05), 0 8px 24px rgba(15, 42, 30, 0.06);
+  --sidebar-w: 15.5rem;
+  --topbar-h: 4.75rem;
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #09140f;
+  --surface: #12201a;
+  --surface-2: #1b2e25;
+  --surface-inverse: #050e0a;
+  --ink: #e9f3ee;
+  --ink-inverse: #e9f3ee;
+  --muted: #9fb5aa;
+  --rule: #23382e;
+  --rule-strong: #5f7d6e;
+
+  --accent: #6fcfa8;
+  --accent-hover: #8fdcbb;
+  --on-accent: #04130d;
+  --signal: #6fcfa8;
+  --signal-text: #8fdcbb;
+  --focus: #6fcfa8;
+
+  --success: #7cc596;
+  --warning: #e8b95e;
+  --danger: #f08a7a;
+  --info: #8dbbdb;
+  --verified: #6fc0b8;
+
+  --eco-1: #f08a7a;
+  --eco-2: #e0a94a;
+  --eco-3: #c7c25f;
+  --eco-4: #7cc596;
+  --eco-5: #6fcfa8;
+
+  --mode-road: #e0a94a;
+  --mode-rail: #8dbbdb;
+  --mode-sea: #6fc0b8;
+  --mode-air: #f08a7a;
+
+  --shadow-pop: 0 12px 32px rgba(0, 0, 0, 0.55);
+  --shadow-card: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.25);
+}
