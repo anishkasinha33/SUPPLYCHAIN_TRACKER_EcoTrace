@@ -2,17 +2,24 @@
 
 A frontend for small businesses to trace materials, suppliers and transport for each product, and to share a public product passport with customers.
 
-Stack: React, React Router, Bootstrap 5 (grid, forms, modal markup), lucide-react icons. Vite is used only to run and build the app. There is no backend: data is local mock data plus localStorage.
+Stack: React, React Router, Bootstrap 5 (grid, forms, modal markup), lucide-react icons. Vite runs and builds the frontend. The backend in `server/` is Node.js + Express + Mongoose on MongoDB.
 
 ## Run it
 
+Needs Node 22+ and MongoDB (local service, Docker, or an Atlas connection string).
+
 ```bash
 npm install
-npm run dev        # http://localhost:5173
-npm run build      # production build in dist/
+cp .env.example .env   # set MONGODB_URI and a long random JWT_SECRET
+
+npm run dev        # app + API on http://localhost:5173 (hot reload; seeds an empty database)
+npm run seed       # optional: wipe and reload all seed data
+npm start          # build, then serve dist/ + API from one Node process
 ```
 
-Demo sign-in: **demo@koraandkin.example / demo1234**, or the "Use demo account" button. Accounts created on the signup page are stored only in this browser (no passwords are stored; any password of 8+ characters works for them). This is **demo authentication, not secure**.
+One Express server does everything: `/api/*` is the API, and every other path is the React app (Vite runs inside Express in development, `dist/` is served in production).
+
+Demo sign-in: **demo@koraandkin.example / demo1234**, or the "Use demo account" button. Passwords are bcrypt-hashed in MongoDB and the session is an HTTP-only cookie.
 
 Public passport example: `/p/ECO-7K4M-2610`.
 
@@ -24,22 +31,40 @@ src/
   pages/        one file per route
   context/      AuthContext, ThemeContext, DataContext
   hooks/        useLocalStorage, useDocumentTitle
-  services/     authService, productService, db, storage   <- the backend seam
+  services/     api (fetch wrapper), authService, productService, db, storage
   data/         seed data, one file per entity (SQL-shaped, ID references only)
   utils/        sustainability.js (eco score), carbon.js (emissions), graph.js (joins), format.js
   styles/       tokens.css (light/dark), base.css (Bootstrap overrides), components.css, pages.css
   fonts.js      the single place fonts are loaded
 ```
 
-## Connecting a real backend later
+## Backend (server/)
 
-Pages never read data directly. They use `DataContext`, which calls `services/`. Each service function is marked `BACKEND:` where a `fetch()` to a Node.js API would replace the local read or write:
+```
+server/
+  index.js          connects to MongoDB, mounts the API and the frontend, listens on PORT
+  dev.js            `npm run dev`: runs index.js and restarts it when server/ changes
+  app.js            API middleware and routes
+  models/           Mongoose models (string _ids match the ids used in src/data)
+  routes/           auth.js, products.js, data.js
+  seed.js           loads src/data into MongoDB (one source of truth for seed data)
+```
 
-- `authService` -> `/api/auth/*` (hashed passwords, HTTP-only cookies)
-- `productService.getGraph/save/remove` -> `/api/products`, `/api/suppliers`, `/api/materials`, `/api/providers`
-- `utils/graph.js` joins rows into the views the UI needs; with SQL this becomes views or endpoint responses.
+| Method | Path | Auth | Purpose |
+| --- | --- | --- | --- |
+| GET | `/api/health` | | API and DB status |
+| GET | `/api/data` | | All rows the dashboard joins in `src/utils/graph.js` |
+| GET | `/api/suppliers`, `/materials`, `/providers`, `/certifications` | | Reference rows |
+| GET | `/api/products`, `/api/products/:id` | | Products, or one product with its lines, stages and legs |
+| PUT | `/api/products/:id` | yes | Create or replace `{ product, materialLines, stages, legs }` |
+| DELETE | `/api/products/:id` | yes | Delete a product you created (sample products cannot be deleted) |
+| POST | `/api/products/reset` | yes | Restore sample products and remove created ones |
+| POST | `/api/auth/signup`, `/login`, `/logout` | | Session cookie |
+| GET, PATCH | `/api/auth/me` | yes | Current profile |
 
-Entities map to tables: User, Product, Material, Supplier, Provider, Certification, ProductMaterial, PipelineStage, TransportLeg. The eco score and carbon results are computed in `utils/` and can stay on the client or move to the server.
+Pages never read data directly: `DataContext` calls `services/`, which call the API through `services/api.js` with same-origin relative URLs. The eco score and carbon results are still computed on the client in `utils/`.
+
+Deploying needs a host that runs Node (`npm run build && npm start`) plus a MongoDB connection string; a static-only host cannot serve the API.
 
 ## Notes
 
