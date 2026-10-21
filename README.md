@@ -64,7 +64,14 @@ server/
 
 Pages never read data directly: `DataContext` calls `services/`, which call the API through `services/api.js` with same-origin relative URLs. The eco score and carbon results are still computed on the client in `utils/`.
 
-Deploying needs a host that runs Node (`npm run build && npm start`) plus a MongoDB connection string; a static-only host cannot serve the API.
+## Deploying on Vercel
+
+`vercel.json` serves the built app for every page path and sends `/api/*` to `api/index.js`, a serverless function that runs the same Express app. In the Vercel project settings (Environment Variables), set:
+
+- `MONGODB_URI`: a cloud database such as MongoDB Atlas (Vercel cannot reach `127.0.0.1` on your machine). In Atlas, allow access from `0.0.0.0/0` under Network Access.
+- `JWT_SECRET`: a long random string.
+
+Then redeploy. An empty database is seeded on the first API request. Any other Node host works too: `npm start` builds and serves everything from one process.
 
 ## Notes
 
