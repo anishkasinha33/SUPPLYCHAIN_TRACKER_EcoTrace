@@ -59,7 +59,7 @@ export async function seedIfEmpty() {
   return true;
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   await connectDb();
   await seedAll();
   console.log('Seed data loaded.');
